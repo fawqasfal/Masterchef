@@ -11,10 +11,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Game implements ApplicationListener {
-
 	
+	World world;
+	Box2DDebugRenderer debugRenderer;
 	Texture cleese;
 	Rectangle cleeseHead;
 	
@@ -27,10 +31,12 @@ public class Game implements ApplicationListener {
 	public void create() {
 		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 400, 400);
-		
+		camera.setToOrtho(false, 200, 200);
 		
 		batch = new SpriteBatch();
+		
+		world = new World(new Vector2(0, -10), true);
+		debugRenderer = new Box2DDebugRenderer();
 		
 		// just for testing
 		cleese = new Texture(Gdx.files.internal("/root/git/Masterchef/masterchef/src/assets/cleese.png"));
@@ -48,11 +54,23 @@ public class Game implements ApplicationListener {
 
 	}
 	public void update() {
+		
+		world.step(1/60f, 6, 2);
+		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			cleeseHead.x--;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			cleeseHead.x++;
+		}
+		
+		// punches
+		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			
+		} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			
+		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			
 		}
 		
 	}
@@ -73,6 +91,8 @@ public class Game implements ApplicationListener {
 		batch.begin();
 		batch.draw(cleese, cleeseHead.x, cleeseHead.y);
 		batch.end();
+		
+		debugRenderer.render(world, camera.combined);
 		
 	}
 

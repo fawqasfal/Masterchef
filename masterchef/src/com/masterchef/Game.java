@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -17,8 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Game implements ApplicationListener {
 	
-	Texture floor_image;
-	Floor floor;
+	Sprite floor;
 	
 	Texture cleese;
 	Rectangle cleeseHead;
@@ -28,6 +28,8 @@ public class Game implements ApplicationListener {
 	OrthographicCamera camera;
 	SpriteBatch batch;
 	Box2DDebugRenderer debugRenderer;
+	
+	//InputListener inputListener = new InputListener();
 	
 	List<Food> food = new ArrayList<Food>();
 	
@@ -51,12 +53,9 @@ public class Game implements ApplicationListener {
 		cleeseHead.width = 128;
 		cleeseHead.height = 128;
 		
-		floor_image = new Texture(Gdx.files.internal("assets/floor.png"));
-		floor = new Floor();
-		floor.x = 0;
-		floor.y = -240;
-		floor.width = 256;
-		floor.height = 256;
+		floor = new Sprite(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 256, 256);
+		//floor.setTexture(new Texture(Gdx.files.internal("assets/floor.png")));
+		floor.setPosition(0, -240);
 		
 		chef = new Chef();
 		
@@ -82,7 +81,9 @@ public class Game implements ApplicationListener {
 			//cleeseHead.x++;
 			chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
 		}
-		//if(Gdx.i)
+		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+			chef.body.applyLinearImpulse(new Vector2(0, 10.0f), new Vector2(0, 0), true);
+		}
 		
 		// punches
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -109,7 +110,8 @@ public class Game implements ApplicationListener {
 		// draw sprites
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(floor_image, floor.x, floor.y);
+		//batch.draw(floor_image, floor.x, floor.y);
+		floor.draw(batch);
 		batch.draw(cleese, cleeseHead.x, cleeseHead.y);
 		batch.end();
 		

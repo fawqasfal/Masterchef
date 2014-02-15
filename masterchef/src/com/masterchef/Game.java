@@ -43,7 +43,7 @@ public class Game implements ApplicationListener {
 		debugRenderer = new Box2DDebugRenderer();
 		
 		// just for testing
-		//cleese = new Texture(Gdx.files.internal("/root/git/Masterchef/masterchef/src/assets/cleese.png"));
+
 		cleese = new Texture(Gdx.files.internal("assets/cleese.png"));
 		cleeseHead = new Rectangle();
 		cleeseHead.x = 0;
@@ -92,7 +92,6 @@ public class Game implements ApplicationListener {
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			
 		}
-		
 	}
 	@Override
 	public void render() {

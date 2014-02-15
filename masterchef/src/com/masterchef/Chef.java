@@ -21,7 +21,7 @@ public class Chef extends Rectangle {
 		
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(10, 10);
+		bodyDef.position.set(20, 10);
 		
 		body = Registry.world.createBody(bodyDef);
 		

@@ -17,15 +17,19 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Game implements ApplicationListener {
 	
-	World world;
-	Box2DDebugRenderer debugRenderer;
+	Texture floor_image;
+	Floor floor;
+	
 	Texture cleese;
 	Rectangle cleeseHead;
 	
+	Chef chef;
+	
 	OrthographicCamera camera;
 	SpriteBatch batch;
+	Box2DDebugRenderer debugRenderer;
 	
-	List<Rectangle> food = new ArrayList<Rectangle>();
+	List<Food> food = new ArrayList<Food>();
 	
 	@Override
 	public void create() {
@@ -35,7 +39,7 @@ public class Game implements ApplicationListener {
 		
 		batch = new SpriteBatch();
 		
-		world = new World(new Vector2(0, -10), true);
+		Registry.world = new World(Registry.gravity, true);
 		debugRenderer = new Box2DDebugRenderer();
 		
 		// just for testing
@@ -46,6 +50,15 @@ public class Game implements ApplicationListener {
 		cleeseHead.width = 128;
 		cleeseHead.height = 128;
 		
+		floor_image = new Texture(Gdx.files.internal("/root/git/Masterchef/masterchef/src/assets/floor.png"));
+		floor = new Floor();
+		floor.x = 0;
+		floor.y = -240;
+		floor.width = 256;
+		floor.height = 256;
+		
+		chef = new Chef();
+		
 	}
 
 	@Override
@@ -55,14 +68,20 @@ public class Game implements ApplicationListener {
 	}
 	public void update() {
 		
-		world.step(1/60f, 6, 2);
+		Registry.world.step(1/60f, 6, 2);
+		
+		cleeseHead.x = Registry.b2dScale.x * chef.body.getPosition().x;
+		cleeseHead.y = Registry.b2dScale.y * chef.body.getPosition().y;
 		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			cleeseHead.x--;
+			//cleeseHead.x--;
+			chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			cleeseHead.x++;
+			//cleeseHead.x++;
+			chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
 		}
+		//if(Gdx.i)
 		
 		// punches
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -89,10 +108,11 @@ public class Game implements ApplicationListener {
 		// draw sprites
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		batch.draw(floor_image, floor.x, floor.y);
 		batch.draw(cleese, cleeseHead.x, cleeseHead.y);
 		batch.end();
 		
-		debugRenderer.render(world, camera.combined);
+		debugRenderer.render(Registry.world, camera.combined);
 		
 	}
 

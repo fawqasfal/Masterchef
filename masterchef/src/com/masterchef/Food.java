@@ -37,7 +37,7 @@ public class Food extends Box {
 		vertices[2] = new Vector2(1.2f, 1.2f);
 		vertices[3] = new Vector2(0, 1.2f);
 		ps.set(vertices);
-		ps.setRadius(0.1f);
+		ps.setRadius(0.0f);
 		
 		fd = new FixtureDef();
 		fd.shape = ps;

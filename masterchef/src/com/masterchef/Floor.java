@@ -35,7 +35,7 @@ public class Floor extends Sprite {
 		vertices[3] = new Vector2(0, 1.6f);
 		ps.set(vertices);
 		//ps.setAsBox(20.0f, 0.2f);
-		ps.setRadius(0.1f);
+		ps.setRadius(0.0f);
 		
 		fd = new FixtureDef();
 		fd.shape = ps;

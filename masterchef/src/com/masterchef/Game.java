@@ -173,20 +173,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		//box.setOrigin(box.getX()+64, box.getY()+64);
 		
-		for (Food foods : food) {
-			
-			foods.setRotation(foods.body.getAngle());
-			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
-			if (foods.body.getJointList().size != 0)
-				System.out.println(foods.body.getJointList().size);
-		}
-		//for some reason this has to be in it's own loop
-		for (Food foods : food ) {
-			if ( Math.abs(foods.getY() - floor.getY()) < 25) {
-				foods.body.setActive(false);
-				foods.isOn = false;
-				}
-		}
+		
 		chef.body.setFixedRotation(true);
 		chef.setRotation(chef.body.getAngle());
 		chef.setScaledPosition(chef.body.getPosition().x, chef.body.getPosition().y);
@@ -256,7 +243,21 @@ public class Game implements ApplicationListener, InputProcessor {
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			
 		}
-
+		for (Food foods : food) {
+			
+			foods.setRotation(foods.body.getAngle());
+			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
+			if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f) {
+				System.out.println("jumpen!");
+			}
+		}
+		//for some reason this has to be in it's own loop
+		for (Food foods : food ) {
+			if ( Math.abs(foods.getY() - floor.getY()) < 25) {
+				foods.body.setActive(false);
+				foods.isOn = false;
+				}
+		}
 		
 	}
 	@Override
@@ -312,7 +313,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			if (foods.isOn)
 				foods.draw(batch);
 		}
-		//box.draw(batch);m
+		//box.draw(batch);
 		
 		batch.end();
 		debugRenderer.render(Registry.world, camera.combined);

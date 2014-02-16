@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class Food extends Sprite {
+public class Food extends Box {
 	public final String name;
 	public final int RAW = 0;
 	public final int COOKED = 1;
@@ -37,7 +37,7 @@ public class Food extends Sprite {
 		vertices[2] = new Vector2(1.2f, 1.2f);
 		vertices[3] = new Vector2(0, 1.2f);
 		ps.set(vertices);
-		ps.setRadius(0.0f);
+		ps.setRadius(0.1f);
 		
 		fd = new FixtureDef();
 		fd.shape = ps;

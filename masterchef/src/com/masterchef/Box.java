@@ -7,6 +7,7 @@ public class Box extends Sprite {
 	
 	public Box(Texture texture, int srcX, int srcY, int srcWidth, int srcHeight) {
 		super(texture, srcX, srcY, srcWidth, srcHeight);
+		this.setOrigin(0, 0);
 	}
 	
 	public void setRotation(float angle) {

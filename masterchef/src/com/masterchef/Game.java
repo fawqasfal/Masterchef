@@ -100,14 +100,14 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 16);
 		floor.setPosition(0, 0);
-		/*for (int i = 0; i < 25d; i++) {
+		for (int i = 0; i < 25d; i++) {
 			int index = (int) (Math.random() * possibleFoodPics.size()); 
 			String foodFile = possibleFoodPics.get(index);
 			String foodName =  foodFile.substring(7,foodFile.indexOf("."));
 			Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 12 ,12 );
 			thisFood.setPosition(0,5);
 			food.add(thisFood);
-		}*/
+		}
 		chef = new Chef(new Texture(Gdx.files.internal("assets/cleese.png")), 0, 0, 32, 32);
 		chef.setPosition(0, 5);
 		
@@ -146,10 +146,10 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		//box.setOrigin(box.getX()+64, box.getY()+64);
 		
-		/*for (Food foods : food)d {
-			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
-			foods.setRotation((float)(foods.body.getAngle() * 180 / Math.PI));
-		}*/
+		for (Food foods : food) {
+			foods.setRotation(foods.body.getAngle());
+			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
+		}
 		chef.setRotation(chef.body.getAngle());
 		chef.setScaledPosition(chef.body.getPosition().x, chef.body.getPosition().y);
 		
@@ -208,9 +208,9 @@ public class Game implements ApplicationListener, InputProcessor {
 		batch.begin();
 		floor.draw(batch);
 		chef.draw(batch);
-		/*for  (Food foods : food) {
+		for  (Food foods : food) {
 			foods.draw(batch);
-		}*/
+		}
 		box.draw(batch);
 		batch.end();
 		debugRenderer.render(Registry.world, camera.combined);

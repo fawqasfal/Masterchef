@@ -30,7 +30,8 @@ public class Game implements ApplicationListener {
 	Box2DDebugRenderer debugRenderer;
 	
 	List<Food> food = new ArrayList<Food>();
-	
+	ArrayList<Texture> foodRenders = new ArrayList<Texture>();
+	ArrayList<Rectangle> foodRects = new ArrayList<Rectangle>();
 	@Override
 	public void create() {
 		
@@ -43,7 +44,20 @@ public class Game implements ApplicationListener {
 		debugRenderer = new Box2DDebugRenderer();
 		
 		// just for testing
+		
+		//NEW FOODS HERE : 
+			//food.add(new Food("chicken", "assets/chicken.jpg"));
+			food.add(new Food("duck", "assets/duck.jpg"));
 
+		for (Food foods : food) {
+			foodRenders.add(new Texture (Gdx.files.internal(foods.getPic())));
+			Rectangle thisFood = new Rectangle();
+			thisFood.x = 200; //change to width of screen later...
+			thisFood.y = 200; //change to height of screen later...
+			thisFood.width = 128;
+			thisFood.height = 128;
+			foodRects.add(thisFood);
+		}
 		cleese = new Texture(Gdx.files.internal("assets/cleese.png"));
 		cleeseHead = new Rectangle();
 		cleeseHead.x = 0;
@@ -55,8 +69,8 @@ public class Game implements ApplicationListener {
 		floor = new Floor();
 		floor.x = 0;
 		floor.y = -240;
-		floor.width = 256;
-		floor.height = 256;
+		floor.width = 512;
+		floor.height = 512;
 		
 		chef = new Chef();
 		
@@ -70,10 +84,15 @@ public class Game implements ApplicationListener {
 	public void update() {
 		
 		Registry.world.step(1/60f, 6, 2);
-		
+	
 		cleeseHead.x = Registry.b2dScale.x * chef.body.getPosition().x;
 		cleeseHead.y = Registry.b2dScale.y * chef.body.getPosition().y;
-		
+		for (Rectangle foodRect : foodRects) {
+			int thisInd = foodRects.indexOf(foodRect);
+			foodRect.x = Registry.b2dScale.x * food.get(thisInd).body.getPosition().x;
+			foodRect.y = Registry.b2dScale.y * food.get(thisInd).body.getPosition().y;
+			
+		}
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			//cleeseHead.x--;

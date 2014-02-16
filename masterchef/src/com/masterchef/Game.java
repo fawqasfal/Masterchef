@@ -294,7 +294,7 @@ public class Game implements ApplicationListener, InputProcessor {
 
 		if(keycode == Input.Keys.W) {
 			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
-				if (Math.abs(System.nanoTime() - sinceLastPressed) > 1.5E9) {
+				if (Math.abs(System.nanoTime() - sinceLastPressed) > 1.25E9) {
 				sinceLastPressed = System.nanoTime();
 				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
 				currentAnimation = chefJump;

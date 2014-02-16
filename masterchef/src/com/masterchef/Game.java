@@ -64,7 +64,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	@Override
 	public void create() {
 		possibleFoodPics.add("assets/chicken.png");
-		possibleFoodPics.add("assets/duck.jpg");
+		possibleFoodPics.add("assets/duck.png");
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 200, 200);
@@ -121,16 +121,16 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
 		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
-		chefIdleFrames = new TextureRegion[4];
+		chefIdleFrames = new TextureRegion[2];
 		chefWalkFrames = new TextureRegion[8];
 		for(int i = 0; i < 8; i++) {
 			chefWalkFrames[i] = tmp[0][i+3];
 		}
-		for(int i = 0; i < 4; i++) {
-			chefIdleFrames[i] = tmp[0][i];
+		for(int i = 0; i < 2; i++) {
+			chefIdleFrames[i] = tmp[0][i+1];
 		}
 		chefWalk = new Animation(0.075f, chefWalkFrames);
-		chefIdle = new Animation(0.1f, chefIdleFrames);
+		chefIdle = new Animation(0.2f, chefIdleFrames);
 		
 	}
 

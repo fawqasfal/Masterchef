@@ -28,7 +28,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	
 	public final int LEFT = 1;
 	public final int RIGHT = 2;
-	int score;
+	String mostRecent = new String();
 	int facing1 = RIGHT;
 	int facing2 = RIGHT;
 	
@@ -283,7 +283,10 @@ public class Game implements ApplicationListener, InputProcessor {
 			float neccX = Math.abs(foods.body.getPosition().x - chef.body.getPosition().x);
 			float neccY = foods.body.getPosition().y - chef.body.getPosition().x;
 			if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f && neccX < 10 && neccY < 65)  {
-				score++;
+				mostRecent = "chef";
+			}
+			if (Math.abs(chef.body.getLinearVelocity().y) > 0.05f && neccX < 10 && neccY < 65) {
+				mostRecent = "chef2";
 			}
 		}
 		//for some reason this has to be in it's own loop

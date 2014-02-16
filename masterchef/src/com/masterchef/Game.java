@@ -144,7 +144,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		} else if (keycode == Input.Keys.D) {
 			
 		}
-		if(keycode == Input.Keys.W) {
+		if(keycode == Input.Keys.W && (chef.body.getPosition().y <= 1.9)) {
 			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
 		}
 		return false;

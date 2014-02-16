@@ -33,7 +33,7 @@ public class Floor extends Sprite {
 		fd = new FixtureDef();
 		fd.shape = ps;
 		fd.density = 0.5f;
-		fd.friction = 0.4f;
+		fd.friction = 0.9f;
 		fd.restitution = 0.2f;
 		
 		f = body.createFixture(fd);

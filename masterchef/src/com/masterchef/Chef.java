@@ -33,7 +33,7 @@ public class Chef extends Sprite {
 		fd = new FixtureDef();
 		fd.shape = ps;
 		fd.density = 0.5f;
-		fd.friction = 0.3f;
+		fd.friction = 0.96f;
 		fd.restitution = 0.2f;
 		
 		f = body.createFixture(fd);

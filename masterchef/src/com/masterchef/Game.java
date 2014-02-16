@@ -72,11 +72,11 @@ public class Game implements ApplicationListener, InputProcessor {
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			//cleeseHead.x--;
 			//chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
-			chef.body.setLinearVelocity(-2.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
+			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			//cleeseHead.x++;
 			//chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
-			chef.body.setLinearVelocity(2.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
+			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
 		}
 		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			chef.body.applyLinearImpulse(new Vector2(0, 10.0f), new Vector2(0, 0), true);

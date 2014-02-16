@@ -47,7 +47,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	
 	
 	Texture cleese_image;
-	Sprite box;
+	Box box;
 	BodyDef bodyDef;
 	Body body;
 	PolygonShape ps;
@@ -69,7 +69,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		Gdx.input.setInputProcessor(this);
 		
 		cleese_image = new Texture(Gdx.files.internal("assets/cleese.png"));
-		box = new Sprite(cleese_image, 0, 0, 128, 128);
+		box = new Box(cleese_image, 0, 0, 128, 128);
 		box.setOrigin(0, 0);
 		
 		bodyDef = new BodyDef();
@@ -107,7 +107,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 12 ,12 );
 			thisFood.setPosition(0,5);
 			food.add(thisFood);
-		} 
+		}*/
 		chef = new Chef(new Texture(Gdx.files.internal("assets/cleese.png")), 0, 0, 32, 32);
 		chef.setPosition(0, 5);
 		
@@ -122,7 +122,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			chefIdleFrames[i] = tmp[1][i];
 		}
 		chefWalk = new Animation(0.025f, chefWalkFrames);
-		chefIdle = new Animation(0.025f, chefIdleFrames);*/
+		chefIdle = new Animation(0.025f, chefIdleFrames);
 		
 	}
 
@@ -138,21 +138,23 @@ public class Game implements ApplicationListener, InputProcessor {
 		//stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
 		
-		box.setPosition(box.getOriginX()-(box.getWidth()/2), box.getOriginY() - (box.getHeight()/2));
-		box.setRotation((float)(body.getAngle() * 180 / Math.PI));
-		box.setPosition(body.getPosition().x * 10, body.getPosition().y * 10);
+		//box.setPosition(box.getOriginX()-(box.getWidth()/2), box.getOriginY() - (box.getHeight()/2));
+		//box.setRotation((float)(body.getAngle() * 180 / Math.PI));
+		//box.setPosition(body.getPosition().x * 10, body.getPosition().y * 10);
+		box.setRotation(body.getAngle());
+		box.setScaledPosition(body.getPosition().x, body.getPosition().y);
 		
 		//box.setOrigin(box.getX()+64, box.getY()+64);
 		
 		/*for (Food foods : food)d {
 			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
 			foods.setRotation((float)(foods.body.getAngle() * 180 / Math.PI));
-		}
-		chef.setPosition(Registry.b2dScale.x * chef.body.getPosition().x, Registry.b2dScale.y * chef.body.getPosition().y);
-		chef.setRotation((float) (chef.body.getAngle() * 180/Math.PI));*/
+		}*/
+		chef.setRotation(chef.body.getAngle());
+		chef.setScaledPosition(chef.body.getPosition().x, chef.body.getPosition().y);
 		
 		// horizontal movement
-		/*if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			//cleeseHead.x--;
 			//chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
 			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
@@ -162,10 +164,10 @@ public class Game implements ApplicationListener, InputProcessor {
 			//chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
 			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
 			//chef.body.applyLinearImpulse(new Vector2(5.0f, 0), chef.body.getWorldCenter(), true);
-		}*/
-		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			chef.body.applyLinearImpulse(new Vector2(0, 10.0f), new Vector2(0, 0), true);
-		}*/
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
+		}
 		
 		// punches
 		if(Gdx.input.isButtonPressed(Buttons.LEFT)) {
@@ -205,8 +207,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		floor.draw(batch);
-		/*chef.draw(batch);
-		for  (Food foods : food) {
+		chef.draw(batch);
+		/*for  (Food foods : food) {
 			foods.draw(batch);
 		}*/
 		box.draw(batch);

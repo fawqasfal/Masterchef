@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +16,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Game implements ApplicationListener, InputProcessor {
@@ -41,6 +48,11 @@ public class Game implements ApplicationListener, InputProcessor {
 	
 	Texture cleese_image;
 	Sprite box;
+	BodyDef bodyDef;
+	Body body;
+	PolygonShape ps;
+	FixtureDef fd;
+	Fixture f;
 	
 	@Override
 	public void create() {
@@ -51,18 +63,43 @@ public class Game implements ApplicationListener, InputProcessor {
 		camera.setToOrtho(false, 800, 800);
 		
 		batch = new SpriteBatch();
-		
 		Registry.world = new World(Registry.gravity, true);
 		debugRenderer = new Box2DDebugRenderer();
 		
 		Gdx.input.setInputProcessor(this);
 		
 		cleese_image = new Texture(Gdx.files.internal("assets/cleese.png"));
-		box = new Sprite(cleese_image, 0, 0, 32, 32);
+		box = new Sprite(cleese_image, 0, 0, 128, 128);
 		
-		/*floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 256, 256);
-		floor.setPosition(0, -240);
-		for (int i = 0; i < 25; i++) {
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		bodyDef.position.set(100, 100);
+		
+		body = Registry.world.createBody(bodyDef);
+		
+		ps = new PolygonShape();
+		Vector2[] vertices = new Vector2[4];
+		vertices[0] = new Vector2(0, 0);
+		vertices[1] = new Vector2(128f, 0);
+		vertices[2] = new Vector2(128f, 128f);
+		vertices[3] = new Vector2(0, 128f);
+		ps.set(vertices);
+		//ps.setAsBox(1.6f, 1.6f);
+		ps.setRadius(0.0f);
+		
+		fd = new FixtureDef();
+		fd.shape = ps;
+		fd.density = 0.5f;
+		fd.friction = 0.96f;
+		fd.restitution = 0.2f;
+		
+		f = body.createFixture(fd);
+		
+		ps.dispose();
+		
+		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 16);
+		floor.setPosition(0, 0);
+		/*for (int i = 0; i < 25d; i++) {
 			int index = (int) (Math.random() * possibleFoodPics.size()); 
 			String foodFile = possibleFoodPics.get(index);
 			String foodName =  foodFile.substring(7,foodFile.indexOf("."));
@@ -97,7 +134,9 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		//stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
-		/*for (Food foods : food) {
+		
+		box.setPosition(body.getPosition().x, body.getPosition().y);
+		/*for (Food foods : food)d {
 			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
 			foods.setRotation((float)(foods.body.getAngle() * 180 / Math.PI));
 		}
@@ -121,6 +160,9 @@ public class Game implements ApplicationListener, InputProcessor {
 		}*/
 		
 		// punches
+		if(Gdx.input.isButtonPressed(Buttons.LEFT)) {
+			body.setTransform(Gdx.input.getX(), 800-Gdx.input.getY(), 0);
+		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			
 		} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -133,7 +175,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	@Override
 	public void render() {
 		// run update
-		update();
+		//update();
 		
 		// clear screen
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -142,25 +184,27 @@ public class Game implements ApplicationListener, InputProcessor {
 		// update camera
 		camera.update();
 		
+		//debugRenderer.render(Registry.world, camera.combined);
 		// draw sprites
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		/*floor.draw(batch);
-		chef.draw(batch);
+		floor.draw(batch);
+		/*chef.draw(batch);
 		for  (Food foods : food) {
 			foods.draw(batch);
 		}*/
 		box.draw(batch);
 		batch.end();
-		
 		debugRenderer.render(Registry.world, camera.combined);
+		
+		
+		update();
 		
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -228,7 +272,7 @@ public class Game implements ApplicationListener, InputProcessor {
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
+		//body.setTransform(screenX, 800-screenY, 0);
 		return false;
 	}
 

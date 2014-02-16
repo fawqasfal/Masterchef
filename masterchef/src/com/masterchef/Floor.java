@@ -30,9 +30,9 @@ public class Floor extends Sprite {
 		ps = new PolygonShape();
 		Vector2[] vertices = new Vector2[4];
 		vertices[0] = new Vector2(0, 0);
-		vertices[1] = new Vector2(20.0f, 0);
-		vertices[2] = new Vector2(20.0f, 1.6f);
-		vertices[3] = new Vector2(0, 1.6f);
+		vertices[1] = new Vector2(800f, 0);
+		vertices[2] = new Vector2(800f, 16f);
+		vertices[3] = new Vector2(0, 16f);
 		ps.set(vertices);
 		//ps.setAsBox(20.0f, 0.2f);
 		ps.setRadius(0.0f);

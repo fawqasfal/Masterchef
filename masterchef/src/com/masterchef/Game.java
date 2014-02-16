@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -37,6 +38,10 @@ public class Game implements ApplicationListener, InputProcessor {
 	List<Food> food = new ArrayList<Food>();
 	ArrayList<String> possibleFoodPics = new ArrayList<String>();
 	
+	
+	Texture cleese_image;
+	Sprite box;
+	
 	@Override
 	public void create() {
 		possibleFoodPics.add("assets/chicken.png");
@@ -52,7 +57,10 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		Gdx.input.setInputProcessor(this);
 		
-		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 256, 256);
+		cleese_image = new Texture(Gdx.files.internal("assets/cleese.png"));
+		box = new Sprite(cleese_image, 0, 0, 32, 32);
+		
+		/*floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 256, 256);
 		floor.setPosition(0, -240);
 		for (int i = 0; i < 25; i++) {
 			int index = (int) (Math.random() * possibleFoodPics.size()); 
@@ -76,7 +84,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			chefIdleFrames[i] = tmp[1][i];
 		}
 		chefWalk = new Animation(0.025f, chefWalkFrames);
-		chefIdle = new Animation(0.025f, chefIdleFrames);
+		chefIdle = new Animation(0.025f, chefIdleFrames);*/
 		
 	}
 
@@ -87,17 +95,17 @@ public class Game implements ApplicationListener, InputProcessor {
 	}
 	public void update() {
 		
-		stateTime += Gdx.graphics.getDeltaTime();
+		//stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
-		for (Food foods : food) {
+		/*for (Food foods : food) {
 			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
 			foods.setRotation((float)(foods.body.getAngle() * 180 / Math.PI));
 		}
 		chef.setPosition(Registry.b2dScale.x * chef.body.getPosition().x, Registry.b2dScale.y * chef.body.getPosition().y);
-		chef.setRotation((float) (chef.body.getAngle() * 180/Math.PI));
+		chef.setRotation((float) (chef.body.getAngle() * 180/Math.PI));*/
 		
 		// horizontal movement
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+		/*if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			//cleeseHead.x--;
 			//chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
 			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
@@ -107,7 +115,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			//chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
 			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
 			//chef.body.applyLinearImpulse(new Vector2(5.0f, 0), chef.body.getWorldCenter(), true);
-		}
+		}*/
 		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			chef.body.applyLinearImpulse(new Vector2(0, 10.0f), new Vector2(0, 0), true);
 		}*/
@@ -137,11 +145,12 @@ public class Game implements ApplicationListener, InputProcessor {
 		// draw sprites
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		floor.draw(batch);
+		/*floor.draw(batch);
 		chef.draw(batch);
 		for  (Food foods : food) {
 			foods.draw(batch);
-		}
+		}*/
+		box.draw(batch);
 		batch.end();
 		
 		debugRenderer.render(Registry.world, camera.combined);

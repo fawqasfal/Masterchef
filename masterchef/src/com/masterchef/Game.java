@@ -61,21 +61,23 @@ public class Game implements ApplicationListener, InputProcessor {
 	
 	
 	Texture cleese_image;
+	Wall wallLeft;
+	Wall wallRight;
 	//Box box;
 	BodyDef bodyDef;
 	Body body;
 	PolygonShape ps;
 	FixtureDef fd;
 	Fixture f;
-	
+	Floor ceilingLeft;
+	Floor ceilingRight;
 	@Override
 	public void create() {
 		possibleFoodPics.add("assets/chicken.png");
 		possibleFoodPics.add("assets/duck.png");
 		possibleFoodPics.add("assets/mutton.png");
 		possibleFoodPics.add("assets/peas.png");
-		possibleFoodPics.add("assets/potatoe.png");
-		
+		possibleFoodPics.add("assets/chef.png");
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 200, 200);
 		
@@ -118,10 +120,20 @@ public class Game implements ApplicationListener, InputProcessor {
 		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 16);
 		floor.setPosition(0, 0);
 		
-		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
-		chef.setOrigin(0, 0);
-		chef.body.setTransform(5, 10, 0);
+		ceilingLeft = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 8);
+		ceilingLeft.body.setTransform(0,19.5f,0);
+		ceilingLeft.setPosition(0, 195);
+
+		wallLeft = new Wall(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 8, 200);
+		wallLeft.body.setTransform(0,0,0);
+		wallLeft.setPosition(0, 0);
 		
+		wallRight = new Wall(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 8, 200);
+		wallRight.body.setTransform(19.5f, 0, 0);
+		wallRight.setPosition(195, 0);
+		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
+		chef.body.setTransform(5, 10, 0);
+
 		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
 		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
 		chefIdleFrames = new TextureRegion[2];
@@ -244,11 +256,12 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		for (Food foods : food) {
-			System.out.println(foods.getX() + " , " + chef.getX() + " X ");
-			System.out.println(foods.getY() + " , " + chef.getY() + " Y ");
 			foods.setRotation(foods.body.getAngle());
 			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
-			if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f) {
+			float neccX = Math.abs(foods.body.getPosition().x - chef.body.getPosition().x);
+			float neccY = foods.body.getPosition().y - chef.body.getPosition().x;
+			if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f && neccX < 10 && neccY < 65)  {
+				score++;
 			}
 		}
 		//for some reason this has to be in it's own loop
@@ -285,8 +298,10 @@ public class Game implements ApplicationListener, InputProcessor {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		floor.draw(batch);
-		
-		
+		wallLeft.draw(batch);
+		wallRight.draw(batch);
+		ceilingLeft.draw(batch);
+		//ceilingRight.draw(batch);
 		//chef.draw(batch);
 		
 		/*batch.draw(// horizontal movement
@@ -359,7 +374,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			if (Math.abs(chef.getY() - floor.getHeight()) <= 50 && chef.body.getLinearVelocity().y >= 0) {
 				if (Math.abs(System.nanoTime() - sinceLastPressed) > 0.5E9) {
 				sinceLastPressed = System.nanoTime();
-				chef.body.applyLinearImpulse(new Vector2(0, 30.0f), chef.body.getWorldCenter(), true);
+				chef.body.applyLinearImpulse(new Vector2(0, 25.0f), chef.body.getWorldCenter(), true);
 				}
 			}
 		}
@@ -369,7 +384,7 @@ public class Game implements ApplicationListener, InputProcessor {
 				String foodFile = possibleFoodPics.get(index);
 				String foodName =  foodFile.substring(7,foodFile.indexOf("."));
 				Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 16 ,16);
-				thisFood.body.setTransform(10,10, 0);
+				thisFood.body.setTransform(10,18, 0);
 				food.add(thisFood);
 			}
 		}

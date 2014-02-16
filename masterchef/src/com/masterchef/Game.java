@@ -31,7 +31,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	public final int RIGHT = 2;
 	public final int IDLE = 3;
 	int facing = 1;
-	
+	int score;
 	Floor floor;
 	double sinceLastPressed = System.nanoTime();
 	Chef chef;
@@ -140,15 +140,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		// TODO Auto-generated method stub
 
 	}
-	public void restartLoop() {
-		for (Food foods : food) {
-			if ( Math.abs(foods.getX() - chef.getX()) <= 15 && (foods.getY() - (chef.getY() + chef.getHeight()) <= 10 )) {
-				foods.body.setActive(false);
-				foods.isOn = false;
-			}
-		
-		}
-	}
+	
 	public void update() {
 		
 		
@@ -164,8 +156,18 @@ public class Game implements ApplicationListener, InputProcessor {
 		//box.setOrigin(box.getX()+64, box.getY()+64);
 		
 		for (Food foods : food) {
+			
 			foods.setRotation(foods.body.getAngle());
 			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
+			if (foods.body.getJointList().size != 0)
+				System.out.println(foods.body.getJointList().size);
+		}
+		//for some reason this has to be in it's own loop
+		for (Food foods : food ) {
+			if ( Math.abs(foods.getY() - floor.getY()) < 25) {
+				foods.body.setActive(false);
+				foods.isOn = false;
+				}
 		}
 		chef.body.setFixedRotation(true);
 		chef.setRotation(chef.body.getAngle());
@@ -209,7 +211,6 @@ public class Game implements ApplicationListener, InputProcessor {
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			
 		}
-		restartLoop();
 
 		
 	}
@@ -296,8 +297,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		}
 
 		if(keycode == Input.Keys.W) {
-			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
-				if (Math.abs(System.nanoTime() - sinceLastPressed) > 1.25E9) {
+			if (Math.abs(chef.getY() - floor.getHeight()) <= 50) {
+				if (Math.abs(System.nanoTime() - sinceLastPressed) > 0.5E9) {
 				sinceLastPressed = System.nanoTime();
 				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
 				currentAnimation = chefJump;
@@ -305,7 +306,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			}
 		}
 		if (keycode == Input.Keys.Q) {
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 1; i++) {
 				int index = (int) (Math.random() * possibleFoodPics.size()); 
 				String foodFile = possibleFoodPics.get(index);
 				String foodName =  foodFile.substring(7,foodFile.indexOf("."));

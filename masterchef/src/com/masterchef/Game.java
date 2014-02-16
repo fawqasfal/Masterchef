@@ -320,6 +320,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		batch.draw(new Texture(Gdx.files.internal("assets/bg.png")), 0, 0);
 		floor.draw(batch);
 		wallLeft.draw(batch);
 		wallRight.draw(batch);

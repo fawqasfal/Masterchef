@@ -1,7 +1,5 @@
 package com.masterchef;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,21 +10,25 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.masterchef.util.KeyProcessor;
 
 public class Game implements ApplicationListener, InputProcessor {
 	
 	Floor floor;
 	
-	Texture cleese;
-	Rectangle cleeseHead;
-	
 	Chef chef;
+	Texture chefSheet;
+	TextureRegion[] chefWalkFrames;
+	TextureRegion[] chefIdleFrames;
+	Animation chefWalk;
+	Animation chefIdle;
+	
+	float stateTime;
 	
 	OrthographicCamera camera;
 	SpriteBatch batch;
@@ -63,6 +65,19 @@ public class Game implements ApplicationListener, InputProcessor {
 		chef = new Chef(new Texture(Gdx.files.internal("assets/cleese.png")), 0, 0, 32, 32);
 		chef.setPosition(0, 5);
 		
+		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
+		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
+		chefIdleFrames = new TextureRegion[4];
+		chefWalkFrames = new TextureRegion[8];
+		for(int i = 0; i < 8; i++) {
+			chefWalkFrames[i] = tmp[1][i+4];
+		}
+		for(int i = 0; i < 4; i++) {
+			chefIdleFrames[i] = tmp[1][i];
+		}
+		chefWalk = new Animation(0.025f, chefWalkFrames);
+		chefIdle = new Animation(0.025f, chefIdleFrames);
+		
 	}
 
 	@Override
@@ -72,13 +87,14 @@ public class Game implements ApplicationListener, InputProcessor {
 	}
 	public void update() {
 		
+		stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
 		for (Food foods : food) {
 			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
 			foods.setRotation(foods.body.getAngle());
 		}
 		chef.setPosition(Registry.b2dScale.x * chef.body.getPosition().x, Registry.b2dScale.y * chef.body.getPosition().y);
-		chef.setRotation(chef.body.getAngle());
+		chef.setRotation((float) (chef.body.getAngle() * (180/(Math.PI * 2))));
 		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -158,7 +174,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		} else if (keycode == Input.Keys.D) {
 			
 		}
-		if(keycode == Input.Keys.W) {
+		if(keycode == Input.Keys.W && (chef.body.getPosition().y <= 1.9)) {
 			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
 		}
 		return false;

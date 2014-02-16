@@ -42,7 +42,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	Animation chefIdle;
 	Animation currentAnimation;
 	TextureRegion currentFrame;
-	
+	double sinceLastPressed;
 	float stateTime;
 	
 	OrthographicCamera camera;
@@ -170,7 +170,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
 			currentAnimation = chefWalk;
 		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
+			//chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
 		} else {
 			currentAnimation = chefIdle;
 		}
@@ -200,7 +200,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		// run update
 		//update();
 		
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(1.0f, 1.0f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		// update camera
@@ -217,7 +217,19 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		//chef.draw(batch);
 		
-		/*batch.draw(chefWalk.getKeyFrame(stateTime, true), chef.getX(), chef.getY(), chef.getOriginX(), chef.getOriginY(),
+		/*batch.draw(// horizontal movement
+		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
+			currentAnimation = chefWalk;
+		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
+			currentAnimation = chefWalk;
+		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
+		} else {
+			currentAnimation = chefIdle;
+		}
+		chefWalk.getKeyFrame(stateTime, true), chef.getX(), chef.getY(), chef.getOriginX(), chef.getOriginY(),
 				chef.getWidth(), chef.getHeight(), chef.getScaleX(), chef.getScaleY(), chef.getRotation());*/
 		currentFrame = currentAnimation.getKeyFrame(stateTime, true);
 		
@@ -264,7 +276,13 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		if(keycode == Input.Keys.W) {
-			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
+				if (Math.abs(System.nanoTime() - sinceLastPressed) > 2E9) {
+				sinceLastPressed = System.nanoTime();
+				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
+			
+				}
+			}
 		}
 		if(keycode == Input.Keys.R) {
 			System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());

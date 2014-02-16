@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class Food extends Sprite {
+public class Food extends Box {
 	public final String name;
 	public final int RAW = 0;
 	public final int COOKED = 1;

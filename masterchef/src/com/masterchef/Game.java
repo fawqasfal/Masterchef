@@ -27,6 +27,11 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Game implements ApplicationListener, InputProcessor {
 	
+	public final int LEFT = 1;
+	public final int RIGHT = 2;
+	public final int IDLE = 3;
+	int facing = 1;
+	
 	Floor floor;
 	
 	Chef chef;
@@ -35,7 +40,9 @@ public class Game implements ApplicationListener, InputProcessor {
 	TextureRegion[] chefIdleFrames;
 	Animation chefWalk;
 	Animation chefIdle;
-	
+	Animation currentAnimation;
+	TextureRegion currentFrame;
+	double sinceLastPressed;
 	float stateTime;
 	
 	OrthographicCamera camera;
@@ -47,7 +54,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	
 	
 	Texture cleese_image;
-	Sprite box;
+	Box box;
 	BodyDef bodyDef;
 	Body body;
 	PolygonShape ps;
@@ -60,7 +67,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		possibleFoodPics.add("assets/duck.jpg");
 		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 800);
+		camera.setToOrtho(false, 200, 200);
 		
 		batch = new SpriteBatch();
 		Registry.world = new World(Registry.gravity, true);
@@ -68,8 +75,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		Gdx.input.setInputProcessor(this);
 		
-		cleese_image = new Texture(Gdx.files.internal("assets/cleese.png"));
-		box = new Sprite(cleese_image, 0, 0, 128, 128);
+		/*cleese_image = new Texture(Gdx.files.internal("assets/cleese.png"));
+		box = new Box(cleese_image, 0, 0, 128, 128);
 		box.setOrigin(0, 0);
 		
 		bodyDef = new BodyDef();
@@ -81,12 +88,12 @@ public class Game implements ApplicationListener, InputProcessor {
 		ps = new PolygonShape();
 		Vector2[] vertices = new Vector2[4];
 		vertices[0] = new Vector2(0, 0);
-		vertices[1] = new Vector2(128f, 0);
-		vertices[2] = new Vector2(128f, 128f);
-		vertices[3] = new Vector2(0, 128f);
+		vertices[1] = new Vector2(12.8f, 0);
+		vertices[2] = new Vector2(12.8f, 12.8f);
+		vertices[3] = new Vector2(0, 12.8f);
 		ps.set(vertices);
 		//ps.setAsBox(1.6f, 1.6f);
-		ps.setRadius(1.0f);
+		ps.setRadius(0.1f);
 		
 		fd = new FixtureDef();
 		fd.shape = ps;
@@ -96,33 +103,34 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		f = body.createFixture(fd);
 		
-		ps.dispose();
+		ps.dispose();*/
 		
 		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 16);
 		floor.setPosition(0, 0);
-		/*for (int i = 0; i < 25d; i++) {
+		for (int i = 0; i < 25; i++) {
 			int index = (int) (Math.random() * possibleFoodPics.size()); 
 			String foodFile = possibleFoodPics.get(index);
 			String foodName =  foodFile.substring(7,foodFile.indexOf("."));
 			Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 12 ,12 );
-			thisFood.setPosition(0,5);
+			thisFood.body.setTransform(10,5, 0);
 			food.add(thisFood);
-		} 
-		chef = new Chef(new Texture(Gdx.files.internal("assets/cleese.png")), 0, 0, 32, 32);
-		chef.setPosition(0, 5);
+		}
+		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
+		chef.setOrigin(16, 16);
+		chef.body.setTransform(5, 10, 0);
 		
 		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
 		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
 		chefIdleFrames = new TextureRegion[4];
 		chefWalkFrames = new TextureRegion[8];
 		for(int i = 0; i < 8; i++) {
-			chefWalkFrames[i] = tmp[1][i+4];
+			chefWalkFrames[i] = tmp[0][i+3];
 		}
 		for(int i = 0; i < 4; i++) {
-			chefIdleFrames[i] = tmp[1][i];
+			chefIdleFrames[i] = tmp[0][i];
 		}
-		chefWalk = new Animation(0.025f, chefWalkFrames);
-		chefIdle = new Animation(0.025f, chefIdleFrames);*/
+		chefWalk = new Animation(0.075f, chefWalkFrames);
+		chefIdle = new Animation(0.1f, chefIdleFrames);
 		
 	}
 
@@ -135,42 +143,43 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		
 		
-		//stateTime += Gdx.graphics.getDeltaTime();
+		stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
 		
-		box.setPosition(box.getOriginX()-(box.getWidth()/2), box.getOriginY() - (box.getHeight()/2));
-		box.setRotation((float)(body.getAngle() * 180 / Math.PI));
-		box.setPosition(body.getPosition().x, body.getPosition().y);
+		//box.setPosition(box.getOriginX()-(box.getWidth()/2), box.getOriginY() - (box.getHeight()/2));
+		//box.setRotation((float)(body.getAngle() * 180 / Math.PI));
+		//box.setPosition(body.getPosition().x * 10, body.getPosition().y * 10);
+		//box.setRotation(body.getAngle());
+		//box.setScaledPosition(body.getPosition().x, body.getPosition().y);
 		
 		//box.setOrigin(box.getX()+64, box.getY()+64);
 		
-		/*for (Food foods : food)d {
-			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
-			foods.setRotation((float)(foods.body.getAngle() * 180 / Math.PI));
+		for (Food foods : food) {
+			foods.setRotation(foods.body.getAngle());
+			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
 		}
-		chef.setPosition(Registry.b2dScale.x * chef.body.getPosition().x, Registry.b2dScale.y * chef.body.getPosition().y);
-		chef.setRotation((float) (chef.body.getAngle() * 180/Math.PI));*/
+		chef.body.setFixedRotation(true);
+		chef.setRotation(chef.body.getAngle());
+		chef.setScaledPosition(chef.body.getPosition().x, chef.body.getPosition().y);
 		
 		// horizontal movement
-		/*if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			//cleeseHead.x--;
-			//chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
+		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
-			//chef.body.applyLinearImpulse(new Vector2(-5.0f, 0), chef.body.getWorldCenter(), true);
+			currentAnimation = chefWalk;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			//cleeseHead.x++;
-			//chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
 			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
-			//chef.body.applyLinearImpulse(new Vector2(5.0f, 0), chef.body.getWorldCenter(), true);
-		}*/
-		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			chef.body.applyLinearImpulse(new Vector2(0, 10.0f), new Vector2(0, 0), true);
-		}*/
+			currentAnimation = chefWalk;
+		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+			//chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
+		} else {
+			currentAnimation = chefIdle;
+		}
 		
 		// punches
 		if(Gdx.input.isButtonPressed(Buttons.LEFT)) {
-			body.setTransform(Gdx.input.getX(), 800-Gdx.input.getY(), 0);
-			body.setAwake(true);
+			//body.setTransform(Gdx.input.getX(), 800-Gdx.input.getY(), 0);
+			//body.setAwake(true);
+			
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
 			body.setAngularVelocity(-1);
@@ -191,8 +200,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		// run update
 		//update();
 		
-		// clear screen
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(1.0f, 1.0f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		// update camera
@@ -205,11 +213,35 @@ public class Game implements ApplicationListener, InputProcessor {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		floor.draw(batch);
-		/*chef.draw(batch);
+		
+		
+		//chef.draw(batch);
+		
+		/*batch.draw(// horizontal movement
+		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
+			currentAnimation = chefWalk;
+		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
+			currentAnimation = chefWalk;
+		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
+		} else {
+			currentAnimation = chefIdle;
+		}
+		chefWalk.getKeyFrame(stateTime, true), chef.getX(), chef.getY(), chef.getOriginX(), chef.getOriginY(),
+				chef.getWidth(), chef.getHeight(), chef.getScaleX(), chef.getScaleY(), chef.getRotation());*/
+		currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+		
+		//if(facing == LEFT) currentFrame.flip(true, false);
+		
+		batch.draw(currentFrame, chef.getX(), chef.getY());
+		
 		for  (Food foods : food) {
 			foods.draw(batch);
-		}*/
-		box.draw(batch);
+		}
+		//box.draw(batch);
+		
 		batch.end();
 		debugRenderer.render(Registry.world, camera.combined);
 		
@@ -244,7 +276,13 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		if(keycode == Input.Keys.W) {
-			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
+				if (Math.abs(System.nanoTime() - sinceLastPressed) > 2E9) {
+				sinceLastPressed = System.nanoTime();
+				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
+			
+				}
+			}
 		}
 		if(keycode == Input.Keys.R) {
 			System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());

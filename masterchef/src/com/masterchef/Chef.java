@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class Chef extends Sprite {
+public class Chef extends Box {
 	
 	BodyDef bodyDef;
 	Body body;
@@ -30,8 +30,8 @@ public class Chef extends Sprite {
 		ps = new PolygonShape();
 		Vector2[] vertices = new Vector2[4];
 		vertices[0] = new Vector2(0, 0);
-		vertices[1] = new Vector2(3.2f, 0);
-		vertices[2] = new Vector2(3.2f, 3.2f);
+		vertices[1] = new Vector2(1.6f, 0);
+		vertices[2] = new Vector2(1.6f, 3.2f);
 		vertices[3] = new Vector2(0, 3.2f);
 		ps.set(vertices);
 		//ps.setAsBox(1.6f, 1.6f);

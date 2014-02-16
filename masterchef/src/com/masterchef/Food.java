@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-
 public class Food extends Box {
 	public final String name;
 	public final int RAW = 0;
@@ -18,6 +17,7 @@ public class Food extends Box {
 	public final int ROTTEN = 3;
 	BodyDef bodyDef;
 	Body body;
+	boolean isOn = true;
 	PolygonShape ps;
 	FixtureDef fd;
 	Fixture f;

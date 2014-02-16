@@ -142,9 +142,11 @@ public class Game implements ApplicationListener, InputProcessor {
 	}
 	public void restartLoop() {
 		for (Food foods : food) {
-			if ( Math.abs(foods.getX() - chef.getX()) <= 25 && Math.abs(foods.getY() - chef.getY()) <= 25 ) {
-				food.remove(foods);
+			if ( Math.abs(foods.getX() - chef.getX()) <= 15 && (foods.getY() - (chef.getY() + chef.getHeight()) <= 10 )) {
+				foods.body.setActive(false);
+				foods.isOn = false;
 			}
+		
 		}
 	}
 	public void update() {
@@ -207,7 +209,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			
 		}
-		//restartLoop();
+		restartLoop();
 
 		
 	}
@@ -254,7 +256,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		batch.draw(currentFrame, chef.getX(), chef.getY());
 		
 		for  (Food foods : food) {
-			foods.draw(batch);
+			if (foods.isOn)
+				foods.draw(batch);
 		}
 		//box.draw(batch);
 		

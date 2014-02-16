@@ -1,6 +1,7 @@
 package com.masterchef;
 
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class Chef extends Rectangle {
+public class Chef extends Sprite {
 	
 	BodyDef bodyDef;
 	Body body;
@@ -16,8 +17,8 @@ public class Chef extends Rectangle {
 	FixtureDef fd;
 	Fixture f;
 	
-	public Chef() {
-		super();
+	public Chef(Texture texture, int srcX, int srcY, int srcWidth, int srcHeight) {
+		super(texture, srcX, srcY, srcWidth, srcHeight);
 		
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
@@ -32,8 +33,8 @@ public class Chef extends Rectangle {
 		fd = new FixtureDef();
 		fd.shape = ps;
 		fd.density = 0.5f;
-		fd.friction = 0.4f;
-		fd.restitution = 0.6f;
+		fd.friction = 0.3f;
+		fd.restitution = 0.2f;
 		
 		f = body.createFixture(fd);
 		

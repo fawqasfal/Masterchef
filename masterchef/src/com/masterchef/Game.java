@@ -1,24 +1,27 @@
 package com.masterchef;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.masterchef.util.KeyProcessor;
 
-public class Game implements ApplicationListener {
+public class Game implements ApplicationListener, InputProcessor {
 	
-	Sprite floor;
+	Floor floor;
 	
 	Texture cleese;
 	Rectangle cleeseHead;
@@ -28,8 +31,6 @@ public class Game implements ApplicationListener {
 	OrthographicCamera camera;
 	SpriteBatch batch;
 	Box2DDebugRenderer debugRenderer;
-	
-	//InputListener inputListener = new InputListener();
 	
 	List<Food> food = new ArrayList<Food>();
 	
@@ -44,20 +45,14 @@ public class Game implements ApplicationListener {
 		Registry.world = new World(Registry.gravity, true);
 		debugRenderer = new Box2DDebugRenderer();
 		
-		// just for testing
-		//cleese = new Texture(Gdx.files.internal("/root/git/Masterchef/masterchef/src/assets/cleese.png"));
-		cleese = new Texture(Gdx.files.internal("assets/cleese.png"));
-		cleeseHead = new Rectangle();
-		cleeseHead.x = 0;
-		cleeseHead.y = 0;
-		cleeseHead.width = 128;
-		cleeseHead.height = 128;
+		Gdx.input.setInputProcessor(this);
 		
-		floor = new Sprite(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 256, 256);
+		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 256, 256);
 		//floor.setTexture(new Texture(Gdx.files.internal("assets/floor.png")));
 		floor.setPosition(0, -240);
 		
-		chef = new Chef();
+		chef = new Chef(new Texture(Gdx.files.internal("assets/cleese.png")), 0, 0, 32, 32);
+		chef.setPosition(0, 0);
 		
 	}
 
@@ -70,20 +65,22 @@ public class Game implements ApplicationListener {
 		
 		Registry.world.step(1/60f, 6, 2);
 		
-		cleeseHead.x = Registry.b2dScale.x * chef.body.getPosition().x;
-		cleeseHead.y = Registry.b2dScale.y * chef.body.getPosition().y;
+		chef.setPosition(Registry.b2dScale.x * chef.body.getPosition().x, Registry.b2dScale.y * chef.body.getPosition().y);
+		chef.setRotation(chef.body.getAngle());
 		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			//cleeseHead.x--;
-			chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
+			//chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
+			chef.body.setLinearVelocity(-2.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			//cleeseHead.x++;
-			chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
+			//chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
+			chef.body.setLinearVelocity(2.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			chef.body.applyLinearImpulse(new Vector2(0, 10.0f), new Vector2(0, 0), true);
-		}
+		}*/
 		
 		// punches
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -110,9 +107,9 @@ public class Game implements ApplicationListener {
 		// draw sprites
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		//batch.draw(floor_image, floor.x, floor.y);
 		floor.draw(batch);
-		batch.draw(cleese, cleeseHead.x, cleeseHead.y);
+		chef.draw(batch);
+		
 		batch.end();
 		
 		debugRenderer.render(Registry.world, camera.combined);
@@ -137,4 +134,50 @@ public class Game implements ApplicationListener {
 
 	}
 
+	@Override
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

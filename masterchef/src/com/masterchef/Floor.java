@@ -1,14 +1,15 @@
 package com.masterchef;
 
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-public class Floor extends Rectangle {
+public class Floor extends Sprite {
 	
 	BodyDef bodyDef;
 	Body body;
@@ -16,8 +17,8 @@ public class Floor extends Rectangle {
 	FixtureDef fd;
 	Fixture f;
 	
-	public Floor() {
-		super();
+	public Floor(Texture texture, int srcX, int srcY, int srcWidth, int srcHeight) {
+		super(texture, srcX, srcY, srcWidth, srcHeight);
 		
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.StaticBody;
@@ -33,7 +34,7 @@ public class Floor extends Rectangle {
 		fd.shape = ps;
 		fd.density = 0.5f;
 		fd.friction = 0.4f;
-		fd.restitution = 0.6f;
+		fd.restitution = 0.2f;
 		
 		f = body.createFixture(fd);
 		

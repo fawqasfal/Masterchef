@@ -133,8 +133,6 @@ public class Game implements ApplicationListener, InputProcessor {
 	}
 	public void update() {
 		
-		
-		
 		//stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
 		
@@ -165,9 +163,9 @@ public class Game implements ApplicationListener, InputProcessor {
 			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
 			//chef.body.applyLinearImpulse(new Vector2(5.0f, 0), chef.body.getWorldCenter(), true);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
-		}
+		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+				chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
+		}*/
 		
 		// punches
 		if(Gdx.input.isButtonPressed(Buttons.LEFT)) {
@@ -213,9 +211,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		}
 		box.draw(batch);
 		batch.end();
-		debugRenderer.render(Registry.world, camera.combined);
-		
-		
+		debugRenderer.render(Registry.world, camera.combined);		
 		//update();
 		
 	}
@@ -246,7 +242,9 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		if(keycode == Input.Keys.W) {
-			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+			System.out.println(Math.abs(chef.getY() - floor.getHeight()) <= 30);
+			if (Math.abs(chef.getY() - floor.getHeight()) <= 30)
+				chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
 		}
 		if(keycode == Input.Keys.R) {
 			System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());

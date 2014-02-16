@@ -33,9 +33,9 @@ public class Food extends Box {
 		//ps.setAsBox(0.6f, 0.6f);
 		Vector2[] vertices = new Vector2[4];
 		vertices[0] = new Vector2(0, 0);
-		vertices[1] = new Vector2(1.2f, 0);
-		vertices[2] = new Vector2(1.2f, 1.2f);
-		vertices[3] = new Vector2(0, 1.2f);
+		vertices[1] = new Vector2(1.6f, 0);
+		vertices[2] = new Vector2(1.6f, 1.6f);
+		vertices[3] = new Vector2(0, 1.6f);
 		ps.set(vertices);
 		ps.setRadius(0.0f);
 		

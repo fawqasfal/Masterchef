@@ -67,6 +67,9 @@ public class Game implements ApplicationListener, InputProcessor {
 	public void create() {
 		possibleFoodPics.add("assets/chicken.png");
 		possibleFoodPics.add("assets/duck.png");
+		possibleFoodPics.add("assets/mutton.png");
+		possibleFoodPics.add("assets/peas.png");
+		possibleFoodPics.add("assets/potatoe.png");
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 200, 200);
@@ -109,14 +112,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 16);
 		floor.setPosition(0, 0);
-		for (int i = 0; i < 25; i++) {
-			int index = (int) (Math.random() * possibleFoodPics.size()); 
-			String foodFile = possibleFoodPics.get(index);
-			String foodName =  foodFile.substring(7,foodFile.indexOf("."));
-			Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 12 ,12 );
-			thisFood.body.setTransform(10,5, 0);
-			food.add(thisFood);
-		}
+		
 		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
 		chef.setOrigin(16, 16);
 		chef.body.setTransform(5, 10, 0);
@@ -144,8 +140,14 @@ public class Game implements ApplicationListener, InputProcessor {
 		// TODO Auto-generated method stub
 
 	}
+	public void restartLoop() {
+		for (Food foods : food) {
+			if ( Math.abs(foods.getX() - chef.getX()) <= 25 && Math.abs(foods.getY() - chef.getY()) <= 25 ) {
+				food.remove(foods);
+			}
+		}
+	}
 	public void update() {
-		
 		
 		
 		stateTime += Gdx.graphics.getDeltaTime();
@@ -194,7 +196,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			body.setAngularVelocity(-1);
+			//body.setAngularVelocity(-1);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
 			//body.setAngularVelocity(1);
 		}
@@ -205,6 +207,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			
 		}
+		//restartLoop();
+
 		
 	}
 	@Override
@@ -295,6 +299,16 @@ public class Game implements ApplicationListener, InputProcessor {
 				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
 				currentAnimation = chefJump;
 				}
+			}
+		}
+		if (keycode == Input.Keys.Q) {
+			for (int i = 0; i < 5; i++) {
+				int index = (int) (Math.random() * possibleFoodPics.size()); 
+				String foodFile = possibleFoodPics.get(index);
+				String foodName =  foodFile.substring(7,foodFile.indexOf("."));
+				Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 16 ,16);
+				thisFood.body.setTransform(10,10, 0);
+				food.add(thisFood);
 			}
 		}
 		if(keycode == Input.Keys.R) {

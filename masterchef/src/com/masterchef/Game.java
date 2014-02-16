@@ -191,7 +191,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
 			body.setAngularVelocity(-1);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-			body.setAngularVelocity(1);
+			//body.setAngularVelocity(1);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			

@@ -35,9 +35,8 @@ public class Game implements ApplicationListener, InputProcessor {
 	TextureRegion[] chefIdleFrames;
 	Animation chefWalk;
 	Animation chefIdle;
-	
 	float stateTime;
-	
+	double sinceLastPressed = System.nanoTime();
 	OrthographicCamera camera;
 	SpriteBatch batch;
 	Box2DDebugRenderer debugRenderer;
@@ -132,7 +131,6 @@ public class Game implements ApplicationListener, InputProcessor {
 
 	}
 	public void update() {
-		
 		//stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
 		
@@ -242,9 +240,13 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		if(keycode == Input.Keys.W) {
-			System.out.println(Math.abs(chef.getY() - floor.getHeight()) <= 30);
-			if (Math.abs(chef.getY() - floor.getHeight()) <= 30)
+			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
+				if (Math.abs(System.nanoTime() - sinceLastPressed) > 1E9) {
+				sinceLastPressed = System.nanoTime();
 				chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+				}
+		
+			}
 		}
 		if(keycode == Input.Keys.R) {
 			System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());

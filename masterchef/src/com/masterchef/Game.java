@@ -229,7 +229,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			//chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
 		} 
 		//animation testing
-		if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f) {
+		if(Math.abs(chef.body.getLinearVelocity().y) > 0.2f) {
 			currentAnimation1 = chefJump;
 		}
 		else if (Math.abs(chef.body.getLinearVelocity().x) > 0.2f) {
@@ -238,7 +238,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		else {
 			currentAnimation1 = chefIdle;
 		}
-		if(Math.abs(chef2.body.getLinearVelocity().y) > 0.05f) {
+		if(Math.abs(chef2.body.getLinearVelocity().y) > 0.2f) {
 			currentAnimation2 = chefJump;
 		}
 		else if (Math.abs(chef2.body.getLinearVelocity().x) > 0.2f) {
@@ -270,11 +270,11 @@ public class Game implements ApplicationListener, InputProcessor {
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			facing2 = LEFT;
-			chef2.body.setLinearVelocity(-5.0f, chef2.body.getLinearVelocity().y);
+			chef2.body.setLinearVelocity(-10.0f, chef2.body.getLinearVelocity().y);
 			
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			facing2 = RIGHT;
-			chef2.body.setLinearVelocity(5.0f, chef2.body.getLinearVelocity().y);
+			chef2.body.setLinearVelocity(10.0f, chef2.body.getLinearVelocity().y);
 			
 		}
 		for (Food foods : food) {
@@ -367,7 +367,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		//box.draw(batch);
 		
 		batch.end();
-		debugRenderer.render(Registry.world, camera.combined);
+		//debugRenderer.render(Registry.world, camera.combined);
 		
 		//camera.update();
 		//update();
@@ -441,6 +441,11 @@ public class Game implements ApplicationListener, InputProcessor {
 			chef.body.setLinearVelocity(new Vector2(0, chef.body.getLinearVelocity().y));
 		} else if (keycode == Input.Keys.D) {
 			chef.body.setLinearVelocity(new Vector2(0, chef.body.getLinearVelocity().y));
+		}
+		if(keycode == Input.Keys.LEFT) {
+			chef2.body.setLinearVelocity(new Vector2(0, chef2.body.getLinearVelocity().y));
+		} else if (keycode == Input.Keys.RIGHT) {
+			chef2.body.setLinearVelocity(new Vector2(0, chef2.body.getLinearVelocity().y));
 		}
 		return false;
 	}

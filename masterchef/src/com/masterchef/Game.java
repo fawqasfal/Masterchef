@@ -12,13 +12,11 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -30,8 +28,9 @@ public class Game implements ApplicationListener, InputProcessor {
 	public final int LEFT = 1;
 	public final int RIGHT = 2;
 	public final int IDLE = 3;
-	int facing = 1;
 	int score;
+	int facing = RIGHT;
+	
 	Floor floor;
 	double sinceLastPressed = System.nanoTime();
 	Chef chef;
@@ -39,9 +38,15 @@ public class Game implements ApplicationListener, InputProcessor {
 	TextureRegion[] chefWalkFrames;
 	TextureRegion[] chefIdleFrames;
 	TextureRegion[] chefJumpFrames;
+	TextureRegion[] chefLWalkFrames;
+	TextureRegion[] chefLIdleFrames;
+	TextureRegion[] chefLJumpFrames;
 	Animation chefWalk;
 	Animation chefIdle;
 	Animation chefJump;
+	Animation chefLWalk;
+	Animation chefLIdle;
+	Animation chefLJump;
 	Animation currentAnimation;
 	TextureRegion currentFrame;
 	
@@ -56,7 +61,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	
 	
 	Texture cleese_image;
-	Box box;
+	//Box box;
 	BodyDef bodyDef;
 	Body body;
 	PolygonShape ps;
@@ -120,18 +125,31 @@ public class Game implements ApplicationListener, InputProcessor {
 		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
 		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
 		chefIdleFrames = new TextureRegion[2];
+		chefLIdleFrames = new TextureRegion[2];
 		chefWalkFrames = new TextureRegion[8];
+		chefLWalkFrames = new TextureRegion[8];
 		chefJumpFrames = new TextureRegion[1];
+		chefLJumpFrames = new TextureRegion[1];
 		for(int i = 0; i < 8; i++) {
 			chefWalkFrames[i] = tmp[0][i+3];
+			chefLWalkFrames[i] = tmp[0][i+3];
+			//chefLWalkFrames[i].flip(true, false);
 		}
 		for(int i = 0; i < 2; i++) {
 			chefIdleFrames[i] = tmp[0][i+1];
+			chefLIdleFrames[i] = tmp[0][i+1];
+			//chefLIdleFrames[i].flip(true, false);
 		}
 		chefJumpFrames[0] = tmp[0][0];
+		chefLJumpFrames[0] = tmp[0][0];
+		//chefLJumpFrames[0].flip(true, false);
+		
 		chefWalk = new Animation(0.075f, chefWalkFrames);
+		chefLWalk = new Animation(0.075f, chefLWalkFrames);
 		chefIdle = new Animation(0.2f, chefIdleFrames);
+		chefLIdle = new Animation(0.2f, chefLIdleFrames);
 		chefJump = new Animation(0.0f, chefJumpFrames);
+		chefLJump = new Animation(0.0f, chefLJumpFrames);
 		
 	}
 
@@ -176,10 +194,12 @@ public class Game implements ApplicationListener, InputProcessor {
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
-			currentAnimation = chefWalk;
+			//currentAnimation = chefWalk;
+			facing = LEFT;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
-			currentAnimation = chefWalk;
+			//currentAnimation = chefWalk;
+			facing = RIGHT;
 		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
 				//if (Math.abs(System.nanoTime() - sinceLastPressed) > 1E9) {
@@ -189,9 +209,34 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 			}
 			//chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
-		} else {
-			currentAnimation = chefIdle;
+		} 
+		//animation testing
+		if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f) {
+			if(facing == RIGHT)
+				currentAnimation = chefJump;
+			else if(facing == LEFT){
+				currentAnimation = chefLJump;
+			}
 		}
+		else if (Math.abs(chef.body.getLinearVelocity().x) > 0.2f) {
+			if(facing == RIGHT)
+				currentAnimation = chefWalk;
+			else if(facing == LEFT) {
+				currentAnimation = chefLWalk;
+			}
+		}
+		else {
+			if(facing == RIGHT)
+				currentAnimation = chefIdle;
+			else if (facing == LEFT) {
+				currentAnimation = chefLIdle;
+			}
+		}
+		
+		//if (chef.body.getLinearVelocity().x > 1.0f) facing = RIGHT;
+		//else if (chef.body.getLinearVelocity().x < 1.0f) facing = LEFT;
+		
+		
 		
 		// punches
 		if(Gdx.input.isButtonPressed(Buttons.LEFT)) {
@@ -217,18 +262,25 @@ public class Game implements ApplicationListener, InputProcessor {
 	@Override
 	public void render() {
 		// run update
+		
+		
 		//update();
 		
 		Gdx.gl.glClearColor(1.0f, 1.0f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		// update camera
-		camera.update();
+		//camera.update();
 		
+		
+		camera.update();
 		update();
+		//update();
 		
 		//debugRenderer.render(Registry.world, camera.combined);
 		// draw sprites
+		currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		floor.draw(batch);
@@ -241,31 +293,31 @@ public class Game implements ApplicationListener, InputProcessor {
 			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
 			currentAnimation = chefWalk;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
+			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVdelocity().y);
 			currentAnimation = chefWalk;
 		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
 		} else {
 			currentAnimation = chefIdle;
-		}
-		chefWalk.getKeyFrame(stateTime, true), chef.getX(), chef.getY(), chef.getOriginX(), chef.getOriginY(),
+		}*/
+		/*batch.draw(currentFrame, chef.getX(), chef.getY(), chef.getOriginX(), chef.getOriginY(),
 				chef.getWidth(), chef.getHeight(), chef.getScaleX(), chef.getScaleY(), chef.getRotation());*/
-		currentFrame = currentAnimation.getKeyFrame(stateTime, true);
 		
-		//if(facing == LEFT) currentFrame.flip(true, false);
 		
 		batch.draw(currentFrame, chef.getX(), chef.getY());
+		//batch.draw(, x, y, width, height, srcX, srcY, srcWidth, srcHeight, flipX, flipY);
+		//batch.draw(currentFrame, x, y, originX, originY, width, height, scaleX, scaleY, rotation);
 		
 		for  (Food foods : food) {
 			if (foods.isOn)
 				foods.draw(batch);
 		}
-		//box.draw(batch);
+		//box.draw(batch);m
 		
 		batch.end();
 		debugRenderer.render(Registry.world, camera.combined);
 		
-		
+		//camera.update();
 		//update();
 		
 	}
@@ -278,7 +330,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-
+		update();
 		
 	}
 
@@ -301,7 +353,6 @@ public class Game implements ApplicationListener, InputProcessor {
 				if (Math.abs(System.nanoTime() - sinceLastPressed) > 0.5E9) {
 				sinceLastPressed = System.nanoTime();
 				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
-				currentAnimation = chefJump;
 				}
 			}
 		}
@@ -316,8 +367,8 @@ public class Game implements ApplicationListener, InputProcessor {
 			}
 		}
 		if(keycode == Input.Keys.R) {
-			System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());
-			System.out.println("Org X: " + box.getOriginX() + " Org Y: " + box.getOriginY());
+			//System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());
+			//System.out.println("Org X: " + box.getOriginX() + " Org Y: " + box.getOriginY());
 		}
 		return false;
 	}

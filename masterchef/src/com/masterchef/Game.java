@@ -40,12 +40,29 @@ public class Game implements ApplicationListener, InputProcessor {
 	Chef chef;
 	Chef chef2;
 	Texture chefSheet;
+	Texture chef2Sheet;
 	TextureRegion[] chefWalkFrames;
 	TextureRegion[] chefIdleFrames;
 	TextureRegion[] chefJumpFrames;
 	TextureRegion[] chefLWalkFrames;
 	TextureRegion[] chefLIdleFrames;
 	TextureRegion[] chefLJumpFrames;
+	TextureRegion[] chef2IdleFrames;
+	TextureRegion[] chef2LIdleFrames;
+	TextureRegion[] chef2WalkFrames;
+	TextureRegion[] chef2LWalkFrames;
+	TextureRegion[]chef2LJumpFrames;
+	TextureRegion[] chef2JumpFrames;
+	Animation chef2Walk;
+	Animation chef2Idle;
+	Animation chef2Jump;
+	Animation chef2LWalk;
+	Animation chef2LIdle;
+	Animation chef2LJump;
+	Animation currentAnimation21;
+	Animation currentAnimation22;
+	TextureRegion currentFrame21;
+	TextureRegion currentFrame22;
 	Animation chefWalk;
 	Animation chefIdle;
 	Animation chefJump;
@@ -148,37 +165,60 @@ public class Game implements ApplicationListener, InputProcessor {
 		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
 		chef.body.setTransform(5, 10, 0);
 		
-		chef2 = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
+		chef2 = new Chef(new Texture(Gdx.files.internal("assets/chef2.png")), 0, 0, 512, 512);
 		chef2.body.setTransform(10, 10, 0);
 
 		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
+		chef2Sheet = new Texture(Gdx.files.internal("assets/chef2.png"));
 		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
+		TextureRegion[][] tmp2 = TextureRegion.split(chef2Sheet, 32, 32);
+		chef2IdleFrames = new TextureRegion[2];
+		chef2LIdleFrames = new TextureRegion[2];
+		chef2WalkFrames = new TextureRegion[8];
+		chef2JumpFrames = new TextureRegion[1];
+		chef2LJumpFrames = new TextureRegion[1];
 		chefIdleFrames = new TextureRegion[2];
 		chefLIdleFrames = new TextureRegion[2];
 		chefWalkFrames = new TextureRegion[8];
 		chefLWalkFrames = new TextureRegion[8];
 		chefJumpFrames = new TextureRegion[1];
 		chefLJumpFrames = new TextureRegion[1];
+		chef2LWalkFrames = new TextureRegion[8];
 		for(int i = 0; i < 8; i++) {
 			chefWalkFrames[i] = tmp[0][i+3];
 			chefLWalkFrames[i] = tmp[0][i+3];
 			//chefLWalkFrames[i].flip(true, false);
 		}
+		for(int i = 0; i < 8; i++) {
+			chef2WalkFrames[i] = tmp2[0][i+3];
+			chef2LWalkFrames[i] = tmp2[0][i+3];
+			//chefLWalkFrames[i].flip(true, false);
+		}
 		for(int i = 0; i < 2; i++) {
 			chefIdleFrames[i] = tmp[0][i+1];
+			chef2IdleFrames[i] = tmp2[0][i + 1];
 			chefLIdleFrames[i] = tmp[0][i+1];
+			chef2LIdleFrames[i] = tmp2[0][i + 1];
 			//chefLIdleFrames[i].flip(true, false);
 		}
 		chefJumpFrames[0] = tmp[0][0];
+		chef2JumpFrames[0] = tmp2[0][0];
 		chefLJumpFrames[0] = tmp[0][0];
+		chef2LJumpFrames[0] = tmp2[0][0];
 		//chefLJumpFrames[0].flip(true, false);
 		
 		chefWalk = new Animation(0.075f, chefWalkFrames);
+		chef2Walk = new Animation(0.075f, chef2WalkFrames);
 		chefLWalk = new Animation(0.075f, chefLWalkFrames);
+		chef2LWalk = new Animation(0.075f, chef2LWalkFrames);
 		chefIdle = new Animation(0.2f, chefIdleFrames);
+		chef2Idle = new Animation(0.2f, chef2IdleFrames);
 		chefLIdle = new Animation(0.2f, chefLIdleFrames);
+		chef2LIdle = new Animation(0.2f, chef2IdleFrames);
 		chefJump = new Animation(0.0f, chefJumpFrames);
+		chef2Jump = new Animation(0.0f, chef2JumpFrames);
 		chefLJump = new Animation(0.0f, chefLJumpFrames);
+		chef2LJump = new Animation(0.0f, chef2LJumpFrames);
 		
 	}
 
@@ -216,11 +256,11 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			chef.body.setLinearVelocity(-10.0f, chef.body.getLinearVelocity().y);
+			chef.body.setLinearVelocity(-12.0f, chef.body.getLinearVelocity().y);
 			//currentAnimation = chefWalk;
 			facing1 = LEFT;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			chef.body.setLinearVelocity(10.0f, chef.body.getLinearVelocity().y);
+			chef.body.setLinearVelocity(12.0f, chef.body.getLinearVelocity().y);
 			//currentAnimation = chefWalk;
 			facing1 = RIGHT;
 		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -244,13 +284,13 @@ public class Game implements ApplicationListener, InputProcessor {
 			currentAnimation1 = chefIdle;
 		}
 		if(Math.abs(chef2.body.getLinearVelocity().y) > 0.2f) {
-			currentAnimation2 = chefJump;
+			currentAnimation2 = chef2Jump;
 		}
 		else if (Math.abs(chef2.body.getLinearVelocity().x) > 0.2f) {
-			currentAnimation2 = chefWalk;
+			currentAnimation2 = chef2Walk;
 		}
 		else {
-			currentAnimation2 = chefIdle;
+			currentAnimation2 = chef2Idle;
 		}
 		
 		//if (chef.body.getLinearVelocity().x > 1.0f) facing = RIGHT;
@@ -339,7 +379,6 @@ public class Game implements ApplicationListener, InputProcessor {
 		// draw sprites
 		currentFrame1 = currentAnimation1.getKeyFrame(stateTime, true);
 		currentFrame2 = currentAnimation2.getKeyFrame(stateTime, true);
-		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.draw(bg, 0, 0);

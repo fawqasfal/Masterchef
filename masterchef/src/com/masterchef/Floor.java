@@ -2,6 +2,7 @@ package com.masterchef;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -27,7 +28,13 @@ public class Floor extends Sprite {
 		body = Registry.world.createBody(bodyDef);
 		
 		ps = new PolygonShape();
-		ps.setAsBox(20.0f, 0.2f);
+		Vector2[] vertices = new Vector2[4];
+		vertices[0] = new Vector2(0, 0);
+		vertices[1] = new Vector2(20.0f, 0);
+		vertices[2] = new Vector2(20.0f, 1.6f);
+		vertices[3] = new Vector2(0, 1.6f);
+		ps.set(vertices);
+		//ps.setAsBox(20.0f, 0.2f);
 		ps.setRadius(0.0f);
 		
 		fd = new FixtureDef();

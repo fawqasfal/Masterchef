@@ -2,6 +2,7 @@ package com.masterchef;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -22,12 +23,18 @@ public class Chef extends Sprite {
 		
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(0, 5);
+		bodyDef.position.set(0, 0);
 		
 		body = Registry.world.createBody(bodyDef);
 		
 		ps = new PolygonShape();
-		ps.setAsBox(1.6f, 1.6f);
+		Vector2[] vertices = new Vector2[4];
+		vertices[0] = new Vector2(0, 0);
+		vertices[1] = new Vector2(3.2f, 0);
+		vertices[2] = new Vector2(3.2f, 3.2f);
+		vertices[3] = new Vector2(0, 3.2f);
+		ps.set(vertices);
+		//ps.setAsBox(1.6f, 1.6f);
 		ps.setRadius(0.0f);
 		
 		fd = new FixtureDef();

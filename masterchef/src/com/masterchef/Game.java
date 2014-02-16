@@ -43,7 +43,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		possibleFoodPics.add("assets/duck.jpg");
 		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 200, 200);
+		camera.setToOrtho(false, 800, 800);
 		
 		batch = new SpriteBatch();
 		
@@ -91,10 +91,10 @@ public class Game implements ApplicationListener, InputProcessor {
 		Registry.world.step(1/60f, 6, 2);
 		for (Food foods : food) {
 			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
-			foods.setRotation(foods.body.getAngle());
+			foods.setRotation((float)(foods.body.getAngle() * 180 / Math.PI));
 		}
 		chef.setPosition(Registry.b2dScale.x * chef.body.getPosition().x, Registry.b2dScale.y * chef.body.getPosition().y);
-		chef.setRotation((float) (chef.body.getAngle() * (180/(Math.PI * 2))));
+		chef.setRotation((float) (chef.body.getAngle() * 180/Math.PI));
 		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -174,8 +174,11 @@ public class Game implements ApplicationListener, InputProcessor {
 		} else if (keycode == Input.Keys.D) {
 			
 		}
-		if(keycode == Input.Keys.W && (chef.body.getPosition().y <= 1.9)) {
+		if(keycode == Input.Keys.W) {
 			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+		}
+		if(keycode == Input.Keys.R) {
+			
 		}
 		return false;
 	}

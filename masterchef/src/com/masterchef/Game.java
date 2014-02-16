@@ -129,7 +129,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		wallLeft.setPosition(0, 0);
 		
 		wallRight = new Wall(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 8, 200);
-		wallRight.body.setTransform(19.5f, 0, 0);
+		wallRight.body.setTransform(19.8f, 0, 0);
 		wallRight.setPosition(195, 0);
 		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
 		chef.body.setTransform(5, 10, 0);
@@ -192,11 +192,11 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
+			chef.body.setLinearVelocity(-10.0f, chef.body.getLinearVelocity().y);
 			//currentAnimation = chefWalk;
 			facing = LEFT;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
+			chef.body.setLinearVelocity(10.0f, chef.body.getLinearVelocity().y);
 			//currentAnimation = chefWalk;
 			facing = RIGHT;
 		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -266,7 +266,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		}
 		//for some reason this has to be in it's own loop
 		for (Food foods : food ) {
-			if ( Math.abs(foods.getY() - floor.getY()) < 25) {
+			if ( Math.abs(foods.getY() - floor.getY()) < 25 && !Gdx.input.isKeyPressed(Input.Keys.L)) {
 				foods.body.setActive(false);
 				foods.isOn = false;
 				}
@@ -374,17 +374,18 @@ public class Game implements ApplicationListener, InputProcessor {
 			if (Math.abs(chef.getY() - floor.getHeight()) <= 50 && chef.body.getLinearVelocity().y >= 0) {
 				if (Math.abs(System.nanoTime() - sinceLastPressed) > 0.5E9) {
 				sinceLastPressed = System.nanoTime();
-				chef.body.applyLinearImpulse(new Vector2(0, 25.0f), chef.body.getWorldCenter(), true);
+				chef.body.applyLinearImpulse(new Vector2(0, 35.0f), chef.body.getWorldCenter(), true);
 				}
 			}
 		}
 		if (keycode == Input.Keys.Q) {
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i < 7; i++) {
 				int index = (int) (Math.random() * possibleFoodPics.size()); 
 				String foodFile = possibleFoodPics.get(index);
 				String foodName =  foodFile.substring(7,foodFile.indexOf("."));
+				int random = (int) (Math.random() * 18);
 				Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 16 ,16);
-				thisFood.body.setTransform(10,18, 0);
+				thisFood.body.setTransform(random,18, 0);
 				food.add(thisFood);
 			}
 		}

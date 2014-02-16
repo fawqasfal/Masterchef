@@ -81,12 +81,12 @@ public class Game implements ApplicationListener, InputProcessor {
 		ps = new PolygonShape();
 		Vector2[] vertices = new Vector2[4];
 		vertices[0] = new Vector2(0, 0);
-		vertices[1] = new Vector2(128f, 0);
-		vertices[2] = new Vector2(128f, 128f);
-		vertices[3] = new Vector2(0, 128f);
+		vertices[1] = new Vector2(12.8f, 0);
+		vertices[2] = new Vector2(12.8f, 12.8f);
+		vertices[3] = new Vector2(0, 12.8f);
 		ps.set(vertices);
 		//ps.setAsBox(1.6f, 1.6f);
-		ps.setRadius(1.0f);
+		ps.setRadius(0.1f);
 		
 		fd = new FixtureDef();
 		fd.shape = ps;
@@ -140,7 +140,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		box.setPosition(box.getOriginX()-(box.getWidth()/2), box.getOriginY() - (box.getHeight()/2));
 		box.setRotation((float)(body.getAngle() * 180 / Math.PI));
-		box.setPosition(body.getPosition().x, body.getPosition().y);
+		box.setPosition(body.getPosition().x * 10, body.getPosition().y * 10);
 		
 		//box.setOrigin(box.getX()+64, box.getY()+64);
 		

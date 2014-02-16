@@ -356,7 +356,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		}
 
 		if(keycode == Input.Keys.W) {
-			if (Math.abs(chef.getY() - floor.getHeight()) <= 50) {
+			if (Math.abs(chef.getY() - floor.getHeight()) <= 50 && chef.body.getLinearVelocity().y >= 0) {
 				if (Math.abs(System.nanoTime() - sinceLastPressed) > 0.5E9) {
 				sinceLastPressed = System.nanoTime();
 				chef.body.applyLinearImpulse(new Vector2(0, 30.0f), chef.body.getWorldCenter(), true);

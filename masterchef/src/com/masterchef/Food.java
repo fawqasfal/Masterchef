@@ -43,7 +43,7 @@ public class Food extends Box {
 		fd.shape = ps;
 		fd.density = 0.5f;
 		fd.friction = 0.4f;
-		fd.restitution = 0.1f;
+		fd.restitution = .6f;
 		
 		f = body.createFixture(fd);
 		

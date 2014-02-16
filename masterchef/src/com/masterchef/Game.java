@@ -119,7 +119,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		floor.setPosition(0, 0);
 		
 		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
-		chef.setOrigin(16, 16);
+		chef.setOrigin(0, 0);
 		chef.body.setTransform(5, 10, 0);
 		
 		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
@@ -244,11 +244,11 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		for (Food foods : food) {
-			
+			System.out.println(foods.getX() + " , " + chef.getX() + " X ");
+			System.out.println(foods.getY() + " , " + chef.getY() + " Y ");
 			foods.setRotation(foods.body.getAngle());
 			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
 			if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f) {
-				System.out.println("jumpen!");
 			}
 		}
 		//for some reason this has to be in it's own loop
@@ -359,7 +359,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			if (Math.abs(chef.getY() - floor.getHeight()) <= 50) {
 				if (Math.abs(System.nanoTime() - sinceLastPressed) > 0.5E9) {
 				sinceLastPressed = System.nanoTime();
-				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
+				chef.body.applyLinearImpulse(new Vector2(0, 30.0f), chef.body.getWorldCenter(), true);
 				}
 			}
 		}

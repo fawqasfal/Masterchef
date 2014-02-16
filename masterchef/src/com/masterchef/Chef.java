@@ -31,8 +31,8 @@ public class Chef extends Box {
 		Vector2[] vertices = new Vector2[4];
 		vertices[0] = new Vector2(0, 0);
 		vertices[1] = new Vector2(1.6f, 0);
-		vertices[2] = new Vector2(1.6f, 3.2f);
-		vertices[3] = new Vector2(0, 3.2f);
+		vertices[2] = new Vector2(1.6f, 4.8f);
+		vertices[3] = new Vector2(0, 4.8f);
 		ps.set(vertices);
 		//ps.setAsBox(1.6f, 1.6f);
 		ps.setRadius(0.0f);

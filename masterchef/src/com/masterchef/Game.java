@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -31,7 +32,7 @@ public class Game implements ApplicationListener {
 	
 	List<Food> food = new ArrayList<Food>();
 	ArrayList<Texture> foodRenders = new ArrayList<Texture>();
-	ArrayList<Rectangle> foodRects = new ArrayList<Rectangle>();
+	ArrayList<Sprite> foodPics = new ArrayList<Sprite>();
 	@Override
 	public void create() {
 		
@@ -45,12 +46,10 @@ public class Game implements ApplicationListener {
 		
 		// just for testing
 		
-		//NEW FOODS HERE : 
-			//food.add(new Food("chicken", "assets/chicken.jpg"));
-			food.add(new Food("duck", "assets/duck.jpg"));
+
 
 		for (Food foods : food) {
-			foodRenders.add(new Texture (Gdx.files.internal(foods.getPic())));
+			foodRenders.add(foods.getTexture());
 			Rectangle thisFood = new Rectangle();
 			thisFood.x = 200; //change to width of screen later...
 			thisFood.y = 200; //change to height of screen later...

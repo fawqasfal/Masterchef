@@ -1,16 +1,16 @@
 package com.masterchef;
 
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-public class Food extends Rectangle {
+public class Food extends Sprite {
 	public final String name;
-	public final String picFile;
 	public final int RAW = 0;
 	public final int COOKED = 1;
 	public final int BURNT = 2;
@@ -21,14 +21,12 @@ public class Food extends Rectangle {
 	FixtureDef fd;
 	Fixture f;
 	
-	public Food(String name, String picFile) {
-		super();
+	public Food(String name, Texture texture, int srcX, int srcY, int srcWidth, int srcHeight) {
+		super(texture, srcX, srcY, srcWidth, srcHeight);
 		this.name = name;
-		this.picFile = picFile;
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(20, 10);
-		
 		body = Registry.world.createBody(bodyDef);
 		
 		ps = new PolygonShape();
@@ -50,8 +48,6 @@ public class Food extends Rectangle {
 		return this.name;
 	}
 	
-	public String getPic() {
-		return this.picFile;
-	}
+
 
 }

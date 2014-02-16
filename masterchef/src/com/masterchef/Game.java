@@ -38,7 +38,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	Animation currentAnimation;
 	
 	float stateTime;
-	
+	double sinceLastPressed = System.nanoTime();
 	OrthographicCamera camera;
 	SpriteBatch batch;
 	Box2DDebugRenderer debugRenderer;
@@ -170,10 +170,14 @@ public class Game implements ApplicationListener, InputProcessor {
 			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
 		}
 		
+		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+				chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
+		}*/
+		
 		// punches
 		if(Gdx.input.isButtonPressed(Buttons.LEFT)) {
-			//body.setTransform(Gdx.input.getX(), 800-Gdx.input.getY(), 0);
-			//body.setAwake(true);
+			body.setTransform(Gdx.input.getX(), 800-Gdx.input.getY(), 0);
+			body.setAwake(true);
 			
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
@@ -222,9 +226,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		//box.draw(batch);
 		
 		batch.end();
-		debugRenderer.render(Registry.world, camera.combined);
-		
-		
+		debugRenderer.render(Registry.world, camera.combined);		
 		//update();
 		
 	}
@@ -255,7 +257,13 @@ public class Game implements ApplicationListener, InputProcessor {
 			
 		}
 		if(keycode == Input.Keys.W) {
-			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
+				if (Math.abs(System.nanoTime() - sinceLastPressed) > 1E9) {
+				sinceLastPressed = System.nanoTime();
+				chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+				}
+		
+			}
 		}
 		if(keycode == Input.Keys.R) {
 			System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());

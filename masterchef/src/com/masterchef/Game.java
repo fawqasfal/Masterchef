@@ -31,6 +31,8 @@ public class Game implements ApplicationListener, InputProcessor {
 	String mostRecent = new String();
 	int facing1 = RIGHT;
 	int facing2 = RIGHT;
+	int chefScore;
+	int chef2Score;
 
 	Floor floor;
 	double sinceLastPressed1 = System.nanoTime();
@@ -78,7 +80,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	Floor ceilingRight;
 	
 	BitmapFont font;
-	
+	Texture bg;
 	
 	@Override
 	public void create() {
@@ -125,7 +127,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		f = body.createFixture(fd);
 		
 		ps.dispose();*/
-		
+		bg = new Texture(Gdx.files.internal("assets/bg.png"));
 		font = new BitmapFont();
 		
 		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 16);
@@ -285,19 +287,33 @@ public class Game implements ApplicationListener, InputProcessor {
 			foods.setScaledPosition(foods.body.getPosition().x, foods.body.getPosition().y);
 			float neccX = Math.abs(foods.body.getPosition().x - chef.body.getPosition().x);
 			float neccY = foods.body.getPosition().y - chef.body.getPosition().x;
-			if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f && neccX < 10 && neccY < 65)  {
+			if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f && neccX < 10 && neccY < 65 && mostRecent != "chef")  {
 				mostRecent = "chef";
+				//System.out.println(mostRecent);
 			}
-			if (Math.abs(chef.body.getLinearVelocity().y) > 0.05f && neccX < 10 && neccY < 65) {
+			if (Math.abs(chef2.body.getLinearVelocity().y) > 0.05f && neccX < 10 && neccY < 65 && mostRecent != "chef2") {
 				mostRecent = "chef2";
+				//System.out.println(mostRecent);
 			}
 		}
 		//for some reason this has to be in it's own loop
 		for (Food foods : food ) {
 			if ( Math.abs(foods.getY() - floor.getY()) < 25 && !Gdx.input.isKeyPressed(Input.Keys.L)) {
 				foods.body.setActive(false);
-				foods.isOn = false;
+				if (foods.isOn) {
+					if (mostRecent == "chef") {
+				
+					System.out.println("chef2 missed his turn! chef gets 10 points. chef now has " + (chefScore + 10) + " points.");
+					chefScore+= 10;
 				}
+				if (mostRecent == "chef2") {
+					System.out.println("chef missed his turn! chef2 gets 10 points. chef2 now has " + (chef2Score + 10) + " points.");
+					chef2Score+= 10;
+				}
+				}
+				foods.isOn = false;
+				
+			}
 		}
 		
 	}
@@ -326,7 +342,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(new Texture(Gdx.files.internal("assets/bg.png")), 0, 0);
+		batch.draw(bg, 0, 0);
 		floor.draw(batch);
 		wallLeft.draw(batch);
 		wallRight.draw(batch);
@@ -425,7 +441,7 @@ public class Game implements ApplicationListener, InputProcessor {
 			}
 		}
 		if (keycode == Input.Keys.Q) {
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 2; i++) {
 				int index = (int) (Math.random() * possibleFoodPics.size()); 
 				String foodFile = possibleFoodPics.get(index);
 				int random = (int) (Math.random() * 18);

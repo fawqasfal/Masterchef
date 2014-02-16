@@ -305,9 +305,15 @@ public class Game implements ApplicationListener, InputProcessor {
 				chef.getWidth(), chef.getHeight(), chef.getScaleX(), chef.getScaleY(), chef.getRotation());*/
 		
 		
-		batch.draw(currentFrame, chef.getX(), chef.getY());
+		//batch.draw(currentFrame, chef.getX(), chef.getY());
 		//batch.draw(, x, y, width, height, srcX, srcY, srcWidth, srcHeight, flipX, flipY);
-		//batch.draw(currentFrame, x, y, originX, originY, width, height, scaleX, scaleY, rotation);
+		if(facing == RIGHT) {
+			batch.draw(currentFrame, chef.getX(), chef.getY(), 0, 0, 
+					chef.getWidth()/10, chef.getHeight()/10, 1.0f, 1.0f, 0.0f);
+		} else {
+			batch.draw(currentFrame, chef.getX()+15, chef.getY(), 0, 0, 
+					-chef.getWidth()/10, chef.getHeight()/10, 1.0f, 1.0f, 0.0f);
+		}
 		
 		for  (Food foods : food) {
 			if (foods.isOn)

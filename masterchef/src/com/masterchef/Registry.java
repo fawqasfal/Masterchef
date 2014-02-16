@@ -13,8 +13,4 @@ public class Registry {
 	public static World world;
 	public static Vector2 gravity = new Vector2(0, -10.0f);
 	
-	public Registry() {
-		//b2dScale = new Point(10.0f, 10.0f);
-		//gravity = new Vector2(0, -10.0f);
-	}
 }

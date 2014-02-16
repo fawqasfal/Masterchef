@@ -33,9 +33,12 @@ public class Game implements ApplicationListener, InputProcessor {
 	Box2DDebugRenderer debugRenderer;
 	
 	List<Food> food = new ArrayList<Food>();
+	ArrayList<String> possibleFoodPics = new ArrayList<String>();
 	
 	@Override
 	public void create() {
+		possibleFoodPics.add("assets/chicken.png");
+		possibleFoodPics.add("assets/duck.jpg");
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 200, 200);
@@ -48,11 +51,17 @@ public class Game implements ApplicationListener, InputProcessor {
 		Gdx.input.setInputProcessor(this);
 		
 		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 256, 256);
-		//floor.setTexture(new Texture(Gdx.files.internal("assets/floor.png")));
 		floor.setPosition(0, -240);
-		
+		for (int i = 0; i < 25; i++) {
+			int index = (int) (Math.random() * possibleFoodPics.size()); 
+			String foodFile = possibleFoodPics.get(index);
+			String foodName =  foodFile.substring(7,foodFile.indexOf("."));
+			Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 12 ,12 );
+			thisFood.setPosition(0,5);
+			food.add(thisFood);
+		} 
 		chef = new Chef(new Texture(Gdx.files.internal("assets/cleese.png")), 0, 0, 32, 32);
-		chef.setPosition(0, 0);
+		chef.setPosition(0, 5);
 		
 	}
 
@@ -64,7 +73,10 @@ public class Game implements ApplicationListener, InputProcessor {
 	public void update() {
 		
 		Registry.world.step(1/60f, 6, 2);
-		
+		for (Food foods : food) {
+			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
+			foods.setRotation(foods.body.getAngle());
+		}
 		chef.setPosition(Registry.b2dScale.x * chef.body.getPosition().x, Registry.b2dScale.y * chef.body.getPosition().y);
 		chef.setRotation(chef.body.getAngle());
 		
@@ -111,7 +123,9 @@ public class Game implements ApplicationListener, InputProcessor {
 		batch.begin();
 		floor.draw(batch);
 		chef.draw(batch);
-		
+		for  (Food foods : food) {
+			foods.draw(batch);
+		}
 		batch.end();
 		
 		debugRenderer.render(Registry.world, camera.combined);

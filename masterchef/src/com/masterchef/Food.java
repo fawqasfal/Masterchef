@@ -26,11 +26,10 @@ public class Food extends Sprite {
 		this.name = name;
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(20, 10);
+		bodyDef.position.set(0, 5);
 		body = Registry.world.createBody(bodyDef);
-		
 		ps = new PolygonShape();
-		ps.setAsBox(1.6f, 1.6f);
+		ps.setAsBox(0.6f, 0.6f);
 		ps.setRadius(0.0f);
 		
 		fd = new FixtureDef();

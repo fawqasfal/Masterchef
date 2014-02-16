@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -27,13 +28,15 @@ public class Game implements ApplicationListener, InputProcessor {
 	
 	public final int LEFT = 1;
 	public final int RIGHT = 2;
-	public final int IDLE = 3;
 	int score;
-	int facing = RIGHT;
+	int facing1 = RIGHT;
+	int facing2 = RIGHT;
 	
 	Floor floor;
-	double sinceLastPressed = System.nanoTime();
+	double sinceLastPressed1 = System.nanoTime();
+	double sinceLastPressed2 = System.nanoTime();
 	Chef chef;
+	Chef chef2;
 	Texture chefSheet;
 	TextureRegion[] chefWalkFrames;
 	TextureRegion[] chefIdleFrames;
@@ -47,8 +50,10 @@ public class Game implements ApplicationListener, InputProcessor {
 	Animation chefLWalk;
 	Animation chefLIdle;
 	Animation chefLJump;
-	Animation currentAnimation;
-	TextureRegion currentFrame;
+	Animation currentAnimation1;
+	Animation currentAnimation2;
+	TextureRegion currentFrame1;
+	TextureRegion currentFrame2;
 	
 	float stateTime;
 	
@@ -71,6 +76,10 @@ public class Game implements ApplicationListener, InputProcessor {
 	Fixture f;
 	Floor ceilingLeft;
 	Floor ceilingRight;
+	
+	BitmapFont font;
+	
+	
 	@Override
 	public void create() {
 		possibleFoodPics.add("assets/chicken.png");
@@ -117,6 +126,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		ps.dispose();*/
 		
+		font = new BitmapFont();
+		
 		floor = new Floor(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 800, 16);
 		floor.setPosition(0, 0);
 		
@@ -131,8 +142,12 @@ public class Game implements ApplicationListener, InputProcessor {
 		wallRight = new Wall(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 8, 200);
 		wallRight.body.setTransform(19.8f, 0, 0);
 		wallRight.setPosition(195, 0);
+		
 		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
 		chef.body.setTransform(5, 10, 0);
+		
+		chef2 = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
+		chef2.body.setTransform(10, 10, 0);
 
 		chefSheet = new Texture(Gdx.files.internal("assets/chef.png"));
 		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
@@ -190,46 +205,47 @@ public class Game implements ApplicationListener, InputProcessor {
 		chef.setRotation(chef.body.getAngle());
 		chef.setScaledPosition(chef.body.getPosition().x, chef.body.getPosition().y);
 		
+		chef2.body.setFixedRotation(true);
+		chef2.setRotation(chef2.body.getAngle());
+		chef2.setScaledPosition(chef2.body.getPosition().x, chef2.body.getPosition().y);
+		
 		// horizontal movement
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			chef.body.setLinearVelocity(-10.0f, chef.body.getLinearVelocity().y);
 			//currentAnimation = chefWalk;
-			facing = LEFT;
+			facing1 = LEFT;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			chef.body.setLinearVelocity(10.0f, chef.body.getLinearVelocity().y);
 			//currentAnimation = chefWalk;
-			facing = RIGHT;
+			facing1 = RIGHT;
 		} else if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			if (Math.abs(chef.getY() - floor.getHeight()) <= 49) {
 				//if (Math.abs(System.nanoTime() - sinceLastPressed) > 1E9) {
 				//sinceLastPressed = System.nanoTime();
 				//chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
-				//}
+				//}java
 		
 			}
 			//chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, 5.0f);
 		} 
 		//animation testing
 		if(Math.abs(chef.body.getLinearVelocity().y) > 0.05f) {
-			if(facing == RIGHT)
-				currentAnimation = chefJump;
-			else if(facing == LEFT){
-				currentAnimation = chefLJump;
-			}
+			currentAnimation1 = chefJump;
 		}
 		else if (Math.abs(chef.body.getLinearVelocity().x) > 0.2f) {
-			if(facing == RIGHT)
-				currentAnimation = chefWalk;
-			else if(facing == LEFT) {
-				currentAnimation = chefLWalk;
-			}
+			currentAnimation1 = chefWalk;
 		}
 		else {
-			if(facing == RIGHT)
-				currentAnimation = chefIdle;
-			else if (facing == LEFT) {
-				currentAnimation = chefLIdle;
-			}
+			currentAnimation1 = chefIdle;
+		}
+		if(Math.abs(chef2.body.getLinearVelocity().y) > 0.05f) {
+			currentAnimation2 = chefJump;
+		}
+		else if (Math.abs(chef2.body.getLinearVelocity().x) > 0.2f) {
+			currentAnimation2 = chefWalk;
+		}
+		else {
+			currentAnimation2 = chefIdle;
 		}
 		
 		//if (chef.body.getLinearVelocity().x > 1.0f) facing = RIGHT;
@@ -250,9 +266,15 @@ public class Game implements ApplicationListener, InputProcessor {
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			
-		} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			facing2 = LEFT;
+			chef2.body.setLinearVelocity(-5.0f, chef2.body.getLinearVelocity().y);
 			
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			facing2 = RIGHT;
+			chef2.body.setLinearVelocity(5.0f, chef2.body.getLinearVelocity().y);
 			
 		}
 		for (Food foods : food) {
@@ -293,7 +315,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		//debugRenderer.render(Registry.world, camera.combined);
 		// draw sprites
-		currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+		currentFrame1 = currentAnimation1.getKeyFrame(stateTime, true);
+		currentFrame2 = currentAnimation2.getKeyFrame(stateTime, true);
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
@@ -322,12 +345,19 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		//batch.draw(currentFrame, chef.getX(), chef.getY());
 		//batch.draw(, x, y, width, height, srcX, srcY, srcWidth, srcHeight, flipX, flipY);
-		if(facing == RIGHT) {
-			batch.draw(currentFrame, chef.getX(), chef.getY(), 0, 0, 
+		if(facing1 == RIGHT) {
+			batch.draw(currentFrame1, chef.getX(), chef.getY(), 0, 0, 
 					chef.getWidth()/10, chef.getHeight()/10, 1.0f, 1.0f, 0.0f);
 		} else {
-			batch.draw(currentFrame, chef.getX()+15, chef.getY(), 0, 0, 
+			batch.draw(currentFrame1, chef.getX()+15, chef.getY(), 0, 0, 
 					-chef.getWidth()/10, chef.getHeight()/10, 1.0f, 1.0f, 0.0f);
+		}
+		if(facing2 == RIGHT) {
+			batch.draw(currentFrame2, chef2.getX(), chef2.getY(), 0, 0, 
+					chef2.getWidth()/10, chef2.getHeight()/10, 1.0f, 1.0f, 0.0f);
+		} else {
+			batch.draw(currentFrame2, chef2.getX()+15, chef2.getY(), 0, 0, 
+					-chef2.getWidth()/10, chef2.getHeight()/10, 1.0f, 1.0f, 0.0f);
 		}
 		
 		for  (Food foods : food) {
@@ -372,9 +402,18 @@ public class Game implements ApplicationListener, InputProcessor {
 
 		if(keycode == Input.Keys.W) {
 			if (Math.abs(chef.getY() - floor.getHeight()) <= 50 && chef.body.getLinearVelocity().y >= 0) {
-				if (Math.abs(System.nanoTime() - sinceLastPressed) > 0.5E9) {
-				sinceLastPressed = System.nanoTime();
+				if (Math.abs(System.nanoTime() - sinceLastPressed1) > 0.5E9) {
+				sinceLastPressed1 = System.nanoTime();
 				chef.body.applyLinearImpulse(new Vector2(0, 35.0f), chef.body.getWorldCenter(), true);
+
+				}
+			}
+		}
+		if(keycode == Input.Keys.UP) {
+			if (Math.abs(chef2.getY() - floor.getHeight()) <= 50 && chef2.body.getLinearVelocity().y >= 0) {
+				if (Math.abs(System.nanoTime() - sinceLastPressed2) > 0.5E9) {
+				sinceLastPressed2 = System.nanoTime();
+				chef2.body.applyLinearImpulse(new Vector2(0, 25.0f), chef2.body.getWorldCenter(), true);
 				}
 			}
 		}
@@ -382,8 +421,8 @@ public class Game implements ApplicationListener, InputProcessor {
 			for (int i = 0; i < 7; i++) {
 				int index = (int) (Math.random() * possibleFoodPics.size()); 
 				String foodFile = possibleFoodPics.get(index);
-				String foodName =  foodFile.substring(7,foodFile.indexOf("."));
 				int random = (int) (Math.random() * 18);
+				String foodName =  "asdf";
 				Food thisFood = new Food(foodName, new Texture(Gdx.files.internal(possibleFoodPics.get(index))), 0, 0, 16 ,16);
 				thisFood.body.setTransform(random,18, 0);
 				food.add(thisFood);

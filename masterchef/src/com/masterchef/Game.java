@@ -38,8 +38,10 @@ public class Game implements ApplicationListener, InputProcessor {
 	Texture chefSheet;
 	TextureRegion[] chefWalkFrames;
 	TextureRegion[] chefIdleFrames;
+	TextureRegion[] chefJumpFrames;
 	Animation chefWalk;
 	Animation chefIdle;
+	Animation chefJump;
 	Animation currentAnimation;
 	TextureRegion currentFrame;
 	double sinceLastPressed;
@@ -123,14 +125,17 @@ public class Game implements ApplicationListener, InputProcessor {
 		TextureRegion[][] tmp = TextureRegion.split(chefSheet, 32, 32);
 		chefIdleFrames = new TextureRegion[2];
 		chefWalkFrames = new TextureRegion[8];
+		chefJumpFrames = new TextureRegion[1];
 		for(int i = 0; i < 8; i++) {
 			chefWalkFrames[i] = tmp[0][i+3];
 		}
 		for(int i = 0; i < 2; i++) {
 			chefIdleFrames[i] = tmp[0][i+1];
 		}
+		chefJumpFrames[0] = tmp[0][0];
 		chefWalk = new Animation(0.075f, chefWalkFrames);
 		chefIdle = new Animation(0.2f, chefIdleFrames);
+		chefJump = new Animation(0.0f, chefJumpFrames);
 		
 	}
 
@@ -280,7 +285,7 @@ public class Game implements ApplicationListener, InputProcessor {
 				if (Math.abs(System.nanoTime() - sinceLastPressed) > 2E9) {
 				sinceLastPressed = System.nanoTime();
 				chef.body.applyLinearImpulse(new Vector2(0, 20.0f), chef.body.getWorldCenter(), true);
-			
+				currentAnimation = chefJump;
 				}
 			}
 		}

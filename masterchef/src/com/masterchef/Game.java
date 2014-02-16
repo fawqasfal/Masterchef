@@ -85,7 +85,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		vertices[3] = new Vector2(0, 128f);
 		ps.set(vertices);
 		//ps.setAsBox(1.6f, 1.6f);
-		ps.setRadius(0.0f);
+		ps.setRadius(1.0f);
 		
 		fd = new FixtureDef();
 		fd.shape = ps;
@@ -162,6 +162,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		// punches
 		if(Gdx.input.isButtonPressed(Buttons.LEFT)) {
 			body.setTransform(Gdx.input.getX(), 800-Gdx.input.getY(), 0);
+			body.setAwake(true);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			

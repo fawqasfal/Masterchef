@@ -6,7 +6,7 @@ public class KeyProcessor implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+		//System.out.println("DOWN");
 		return false;
 	}
 

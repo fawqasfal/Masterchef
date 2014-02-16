@@ -72,11 +72,13 @@ public class Game implements ApplicationListener, InputProcessor {
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			//cleeseHead.x--;
 			//chef.body.applyForceToCenter(new Vector2(-50.0f, 0), true);
-			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
+			chef.body.setLinearVelocity(-5.0f, chef.body.getLinearVelocity().y);
+			//chef.body.applyLinearImpulse(new Vector2(-5.0f, 0), chef.body.getWorldCenter(), true);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			//cleeseHead.x++;
 			//chef.body.applyForceToCenter(new Vector2(50.0f, 0), true);
-			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocityFromLocalPoint(new Vector2(0, 0)).y);
+			chef.body.setLinearVelocity(5.0f, chef.body.getLinearVelocity().y);
+			//chef.body.applyLinearImpulse(new Vector2(5.0f, 0), chef.body.getWorldCenter(), true);
 		}
 		/*if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			chef.body.applyLinearImpulse(new Vector2(0, 10.0f), new Vector2(0, 0), true);
@@ -94,7 +96,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	}
 	@Override
 	public void render() {
-		// run update code
+		// run update
 		update();
 		
 		// clear screen
@@ -126,6 +128,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	public void resume() {
 		// TODO Auto-generated method stub
 
+		
 	}
 
 	@Override
@@ -136,12 +139,24 @@ public class Game implements ApplicationListener, InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if(keycode == Input.Keys.A) {
+			
+		} else if (keycode == Input.Keys.D) {
+			
+		}
+		if(keycode == Input.Keys.W) {
+			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
+		if(keycode == Input.Keys.A) {
+			chef.body.setLinearVelocity(new Vector2(0, chef.body.getLinearVelocity().y));
+		} else if (keycode == Input.Keys.D) {
+			chef.body.setLinearVelocity(new Vector2(0, chef.body.getLinearVelocity().y));
+		}
 		return false;
 	}
 

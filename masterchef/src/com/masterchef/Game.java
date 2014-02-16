@@ -70,6 +70,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		
 		cleese_image = new Texture(Gdx.files.internal("assets/cleese.png"));
 		box = new Sprite(cleese_image, 0, 0, 128, 128);
+		box.setOrigin(0, 0);
 		
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
@@ -132,10 +133,17 @@ public class Game implements ApplicationListener, InputProcessor {
 	}
 	public void update() {
 		
+		
+		
 		//stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
 		
+		box.setPosition(box.getOriginX()-(box.getWidth()/2), box.getOriginY() - (box.getHeight()/2));
+		box.setRotation((float)(body.getAngle() * 180 / Math.PI));
 		box.setPosition(body.getPosition().x, body.getPosition().y);
+		
+		//box.setOrigin(box.getX()+64, box.getY()+64);
+		
 		/*for (Food foods : food)d {
 			foods.setPosition(Registry.b2dScale.x * foods.body.getPosition().x, Registry.b2dScale.y * foods.body.getPosition().y);
 			foods.setRotation((float)(foods.body.getAngle() * 180 / Math.PI));
@@ -164,6 +172,11 @@ public class Game implements ApplicationListener, InputProcessor {
 			body.setTransform(Gdx.input.getX(), 800-Gdx.input.getY(), 0);
 			body.setAwake(true);
 		}
+		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+			body.setAngularVelocity(-1);
+		} else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+			body.setAngularVelocity(1);
+		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			
 		} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -185,6 +198,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		// update camera
 		camera.update();
 		
+		update();
+		
 		//debugRenderer.render(Registry.world, camera.combined);
 		// draw sprites
 		batch.setProjectionMatrix(camera.combined);
@@ -199,7 +214,7 @@ public class Game implements ApplicationListener, InputProcessor {
 		debugRenderer.render(Registry.world, camera.combined);
 		
 		
-		update();
+		//update();
 		
 	}
 
@@ -232,7 +247,8 @@ public class Game implements ApplicationListener, InputProcessor {
 			chef.body.applyLinearImpulse(new Vector2(0, 40.0f), chef.body.getWorldCenter(), true);
 		}
 		if(keycode == Input.Keys.R) {
-			
+			System.out.println("Box X: " + box.getX() + " Box Y: " + box.getY());
+			System.out.println("Org X: " + box.getOriginX() + " Org Y: " + box.getOriginY());
 		}
 		return false;
 	}

@@ -31,7 +31,7 @@ public class Game implements ApplicationListener, InputProcessor {
 	String mostRecent = new String();
 	int facing1 = RIGHT;
 	int facing2 = RIGHT;
-	
+
 	Floor floor;
 	double sinceLastPressed1 = System.nanoTime();
 	double sinceLastPressed2 = System.nanoTime();
@@ -140,8 +140,8 @@ public class Game implements ApplicationListener, InputProcessor {
 		wallLeft.setPosition(0, 0);
 		
 		wallRight = new Wall(new Texture(Gdx.files.internal("assets/floor.png")), 0, 0, 8, 200);
-		wallRight.body.setTransform(19.8f, 0, 0);
-		wallRight.setPosition(195, 0);
+		wallRight.body.setTransform(19.3f, 0, 0);
+		wallRight.setPosition(193, 0);
 		
 		chef = new Chef(new Texture(Gdx.files.internal("assets/chef.png")), 0, 0, 512, 512);
 		chef.body.setTransform(5, 10, 0);
@@ -187,8 +187,11 @@ public class Game implements ApplicationListener, InputProcessor {
 	}
 	
 	public void update() {
-		
-		
+		if (chef.body.getLinearVelocity().y < 0)
+			chef.body.setLinearVelocity(chef.body.getLinearVelocity().x, chef.body.getLinearVelocity().y * (float) 1.1);
+		if (chef2.body.getLinearVelocity().y < 0)
+		chef2.body.setLinearVelocity(chef2.body.getLinearVelocity().x, chef2.body.getLinearVelocity().y * (float) 1.1);
+
 		stateTime += Gdx.graphics.getDeltaTime();
 		Registry.world.step(1/60f, 6, 2);
 		

@@ -22,7 +22,7 @@ public class Chef extends Sprite {
 		
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(20, 10);
+		bodyDef.position.set(0, 5);
 		
 		body = Registry.world.createBody(bodyDef);
 		

@@ -13,3 +13,8 @@ FEATURES WE'LL WANT LATER :
   on various "fists" for combining meals 
 - enemies ?! people in the kitchen that are planning on stealing your precious 
   meal and sell it themselves ?!
+==========
+
+  I think this was the first hackathon I ever attended. Unfortunately, I completely forgot how exactly to build this; I know we relied on the build process of the IDE. However, I did manage to resurrect some GIFs from the depths of my old computer's hard drive of various parts of this game's development!
+  
+  http://imgur.com/a/gM6cT

@@ -8,6 +8,7 @@ CORE GAME  :
   new meal through the 'window' at the top of the screen. If it's a bad meal,
   the chef will want to avoid it ... or else he'll lose money on the crappy 
   meal ! 
+
 FEATURES WE'LL WANT LATER :
 - scoring system : players can spend the money they earn from meals
   on various "fists" for combining meals 
